@@ -99,11 +99,11 @@ def note(request):
 def show_notes(request):
     if request.method == 'GET':
         notes = Note.objects.all()
-        return render(request, 'project/show_notes.html', {'back': '/', 'notes': notes})
+        return render(request, 'project/notes.html', {'back': '/', 'notes': notes})
     else:
         sort = request.POST['sort']
         print(sort)
-        return render(request, 'project/show_notes.html', {'back': '/'})
+        return render(request, 'project/notes.html', {'back': '/'})
 
 @login_required
 def set_done_note(request, note_id):

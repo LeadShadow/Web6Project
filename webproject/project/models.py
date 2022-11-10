@@ -18,6 +18,7 @@ class Tag(models.Model):
         return f"{self.name}:{self.user_id}"
 
 
+
 class Note(models.Model):
     name = models.CharField(max_length=50, null=False)
     description = models.CharField(max_length=150, null=False)

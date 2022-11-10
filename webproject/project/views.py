@@ -11,7 +11,7 @@ from .forms import TagForm, NoteForm
 
 def signupuser(request):
     if request.method == 'GET':
-        return render(request, 'pages/registration.html', {'form': UserCreationForm()})
+        return render(request, 'project/registration.html', {'form': UserCreationForm()})
     else:
         if request.POST['password1'] == request.POST['password2']:
             try:
@@ -19,20 +19,20 @@ def signupuser(request):
                 user.save()
                 return redirect('login')
             except IntegrityError as err:
-                return render(request, 'pages/registration.html',
+                return render(request, 'project/registration.html',
                               {'form': UserCreationForm(), 'error': 'Username already exist!'})
 
         else:
-            return render(request, 'pages/registration.html',
+            return render(request, 'project/registration.html',
                           {'form': UserCreationForm(), 'error': 'Passwords did not match'})
 
 def loginuser(request):
     if request.method == 'GET':
-        return render(request, 'pages/login.html', {'form': AuthenticationForm()})
+        return render(request, 'project/login.html', {'form': AuthenticationForm()})
     else:
         user = authenticate(request, username=request.POST['username'], password=request.POST['password'])
         if user is None:
-            return render(request, 'pages/login.html',
+            return render(request, 'project/login.html',
                           {'form': AuthenticationForm(), 'error': 'Username or password didn\'t match'})
         login(request, user)
         return redirect('main')
@@ -48,13 +48,15 @@ def main(request):
     notes = []
     if request.user.is_authenticated:
         notes = Note.objects.filter(user_id=request.user).all()
-    return render(request, 'base.html', {"notes": notes})
+    return render(request, 'project/base.html', {"notes": notes})
+
 
 @login_required
 def detail_note(request, note_id):
     note = get_object_or_404(Note, pk=note_id, user_id=request.user)
     note.tag_list = ', '.join([str(name) for name in note.tags.all()])
-    return render(request, 'pages/notes.html', {"note": note})
+    return render(request, 'project/notes.html', {"note": note})
+
 
 @login_required
 def tag(request):
@@ -66,10 +68,10 @@ def tag(request):
             tag.save()
             return redirect(to='main')
         except ValueError as err:
-            return render(request, 'pages/add_tag.html', {'form': TagForm(), 'error': err})
+            return render(request, 'project/add_tag.html', {'form': TagForm(), 'error': err})
         except IntegrityError as err:
-            return render(request, 'pages/add_tag.html', {'form': TagForm(), 'error': 'Tag already exists!'})
-    return render(request, 'pages/add_tag.html', {'form': TagForm()})
+            return render(request, 'project/add_tag.html', {'form': TagForm(), 'error': 'Tag already exists!'})
+    return render(request, 'project/add_tag.html', {'form': TagForm()})
 
 
 @login_required
@@ -88,15 +90,20 @@ def note(request):
                 new_note.tags.add(tag)
             return redirect(to='main')
         except ValueError as err:
-            return render(request, 'pages/notes.html', {"tags": tags, 'form': NoteForm(), 'error': err})
+            return render(request, 'project/notes.html', {"tags": tags, 'form': NoteForm(), 'error': err})
 
-    return render(request, 'pages/notes.html', {"tags": tags, 'form': NoteForm()})
+    return render(request, 'project/notes.html', {"tags": tags, 'form': NoteForm()})
 
 
 @login_required
 def show_notes(request):
-    pass
-
+    if request.method == 'GET':
+        notes = Note.objects.all()
+        return render(request, 'project/show_notes.html', {'back': '/', 'notes': notes})
+    else:
+        sort = request.POST['sort']
+        print(sort)
+        return render(request, 'project/show_notes.html', {'back': '/'})
 
 @login_required
 def set_done_note(request, note_id):

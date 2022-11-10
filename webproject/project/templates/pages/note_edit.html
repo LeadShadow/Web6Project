@@ -1,0 +1,98 @@
+<link
+        rel="stylesheet"
+        href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css"
+        integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk"
+        crossorigin="anonymous"
+/>
+
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container">
+    <div class="row justify-content-center mb-3">
+        <h1>Edit note</h1>
+    </div>
+
+    <div class="row justify-content-center">
+        <form class="col-sm-6" action="/contacts/edit/{{contact.id}}" method="post">
+            <div class="form-group">
+                <div class="input-group flex-nowrap">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text" id="addon-wrapping">Author: </span>
+                    </div>
+                    <input id="colFormLabelAuthor"
+                           class="form-control col-sm-12"
+                           type="text"
+                           placeholder="Author"
+                           name="author"
+                           value="{{note.author}}"
+                           readonly
+                    />
+                </div>
+            </div>
+
+            <div class="form-group">
+                <div class="input-group flex-nowrap">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text" id="addon-wrapping">Note name: </span>
+                    </div>
+                    <input id="colFormLabelNoteName"
+                           class="form-control col-sm-12"
+                           type="text"
+                           placeholder="note_name"
+                           name="note_name"
+                           value="{{note.note_name}}"
+                    />
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="input-group flex-nowrap">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text" id="addon-wrapping">Description: </span>
+                    </div>
+                    <textarea class="form-control" id="textarea" name=description">{{note.description}}</textarea>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <div class="input-group flex-nowrap">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text" id="addon-wrapping">Tags: </span>
+                    </div>
+                    <select id="selectmultiple" name="tags" class="form-control" multiple="multiple">
+                        <option value="1">Option one</option>
+                        <option value="2">Option two</option>
+                        <option value="3">Option three</option>
+                    </select>
+                </div>
+            </div>
+
+
+            <div class="form-group">
+                <div class="input-group flex-nowrap">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text" id="addon-wrapping">Status: </span>
+                    </div>
+                    <input id="colFormLabelStatus"
+                           class="form-control col-sm-12"
+                           type="status"
+                           placeholder="Status"
+                           name="status"
+                           value="{{note.status}}"
+                    />
+                </div>
+            </div>
+
+            <div class="form-group">
+                <div class="form-group">
+                    <a class="btn btn-outline-secondary" href="/tags/add_new">Add new tags</a>
+                </div>
+
+                <button class="btn btn-primary col-sm-12" type="submit">
+                    Update
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

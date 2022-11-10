@@ -1,0 +1,66 @@
+    <link
+            rel="stylesheet"
+            href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css"
+            integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk"
+            crossorigin="anonymous"
+    />
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container">
+    <div class="row justify-content-center mb-3">
+        <h1>Registration</h1>
+    </div>
+    {% if messages %}
+    {% for message in messages %}
+    <div class="alert alert-danger">{{message}}: {{messages[message]}}</div>
+    {% endfor %}
+    {% endif %}
+    <form class="form-horizontal">
+        <fieldset>
+
+            <!-- Form Name -->
+            <legend>registration</legend>
+
+            <!-- Text input-->
+            <div class="form-group">
+                <label class="col-md-4 control-label" for="nickname"></label>
+                <div class="col-md-4">
+                    <input id="nickname" name="nickname" type="text" placeholder="Nickname"
+                           class="form-control input-md">
+
+                </div>
+            </div>
+
+            <!-- Text input-->
+            <div class="form-group">
+                <label class="col-md-4 control-label" for="password"></label>
+                <div class="col-md-4">
+                    <input id="password" name="password" type="text" placeholder="Password"
+                           class="form-control input-md">
+
+                </div>
+            </div>
+
+            <!-- Password input-->
+            <div class="form-group">
+                <label class="col-md-4 control-label" for="email"></label>
+                <div class="col-md-4">
+                    <input id="email" name="email" type="password" placeholder="Email" class="form-control input-md">
+
+                </div>
+            </div>
+
+            <!-- Button -->
+            <div class="form-group">
+                <label class="col-md-4 control-label" for="singlebutton"></label>
+                <div class="col-md-4">
+                    <button id="singlebutton" name="singlebutton" class="btn btn-primary">Registration</button>
+                </div>
+            </div>
+
+        </fieldset>
+    </form>
+
+</div>
+{% endblock %}

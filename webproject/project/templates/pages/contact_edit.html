@@ -1,0 +1,112 @@
+<link
+        rel="stylesheet"
+        href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css"
+        integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk"
+        crossorigin="anonymous"
+/>
+
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container">
+    <div class="row justify-content-center mb-3">
+        <h1>Edit contact</h1>
+    </div>
+    <div class="row justify-content-center mb-3">
+        <img
+                src="{{contact.path}}"
+                width="225"
+                height="225"
+                alt="Avatar photo here"
+                style="object-fit: contain"
+        />
+    </div>
+    <div class="row justify-content-center">
+        <form class="col-sm-6" action="/contacts/edit/{{contact.id}}" method="post">
+            <div class="form-group">
+                <div class="input-group flex-nowrap">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text" id="addon-wrapping">Fullname: </span>
+                    </div>
+                    <input id="colFormLabelFullname"
+                           class="form-control col-sm-12"
+                           type="text"
+                           placeholder="Fullname"
+                           name="fullname"
+                           value="{{contact.fullname}}"
+                    />
+                </div>
+            </div>
+
+            <div class="form-group">
+                <div class="input-group flex-nowrap">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text" id="addon-wrapping">DOB: </span>
+                    </div>
+                    <input id="colFormLabelDOB"
+                           class="form-control col-sm-12"
+                           type="date"
+                           placeholder="DOB"
+                           name="dob"
+                           value="{{contact.dob}}"
+                    />
+                </div>
+            </div>
+
+
+            <div class="form-group">
+                <div class="input-group flex-nowrap">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text" id="addon-wrapping">Address: </span>
+                    </div>
+                    <input id="colFormLabelAddress"
+                           class="form-control col-sm-12"
+                           type="text"
+                           placeholder="Address"
+                           name="address"
+                           value="{{contact.address}}"
+                    />
+                </div>
+            </div>
+
+            <div class="form-group">
+                <div class="input-group flex-nowrap">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text" id="addon-wrapping">Phone: </span>
+                    </div>
+                    <input id="colFormLabelPhone"
+                           class="form-control col-sm-12"
+                           type="text"
+                           placeholder="Phone"
+                           name="phone"
+                           value="{{contact.phone}}"
+                    />
+                </div>
+            </div>
+
+            <div class="form-group">
+                <div class="input-group flex-nowrap">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text" id="addon-wrapping">Email: </span>
+                    </div>
+                    <input id="colFormLabelEmail"
+                           class="form-control col-sm-12"
+                           type="text"
+                           placeholder="Email"
+                           name="email"
+                           value="{{contact.email}}"
+                    />
+                </div>
+            </div>
+
+            <div class="form-group">
+
+                <div class="form-group">
+                    <button class="btn btn-primary col-sm-12" type="submit">
+                        Update
+                    </button>
+                </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

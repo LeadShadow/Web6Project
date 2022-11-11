@@ -129,3 +129,6 @@ dmypy.json
 .pyre/
 /webproject/webproject/settings.py
 /webproject/project/.config
+
+# DS_STore
+.DS_STORE

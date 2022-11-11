@@ -5,15 +5,14 @@
         crossorigin="anonymous"
         xmlns="http://www.w3.org/1999/html"/>
 
-{% extends "base.html" %}
+{% extends "project/base.html" %}
 
 {% block content %}
 <div class="container">
-
     <div class="row mb-3">
         <h1>Notes</h1>
     </div>
-    {% with messages = get_flashed_messages() %}
+    {% with messages=get_flashed_messages %}
     {% if messages %}
     {% for message in messages %}
     <div class="alert alert-info">{{message}}</div>
@@ -42,4 +41,5 @@
             {% endfor %}
         </div>
     </div>
+</div>
     {% endblock %}

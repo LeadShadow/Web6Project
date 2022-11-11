@@ -1,0 +1,61 @@
+    <link
+            rel="stylesheet"
+            href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css"
+            integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk"
+            crossorigin="anonymous"
+    />
+
+{% extends "project/base.html" %}
+
+{% block content %}
+<div class="container">
+    <div class="row justify-content-center mb-3">
+        <h1>Login</h1>
+    </div>
+{% if error %}
+<div>
+    <mark>{{ error }}</mark>
+</div>
+{% endif %}
+
+
+    <div class="row justify-content-center">
+        <form class="col-sm-8" method="post">
+            {% csrf_token %}
+            <legend>Log In</legend>
+
+                <div class="form-group">
+                    <div class="input-group flex-nowrap">
+                        <span class="input-group-text col-sm-2" id="addon-wrapping">Nickname:</span>
+                        <input name="username" type="text" class="form-control" required="">
+                    </div>
+                </div>
+
+                            <div class="form-group">
+                    <div class="input-group flex-nowrap">
+                        <span class="input-group-text col-sm-2" id="addon-wrapping">Password:</span>
+                        <input name="password" type="password" class="form-control" required="">
+                    </div>
+                </div>
+
+            <div class="form-group form-check mb-3">
+                <label class="form-check-label">
+                    <input
+                            type="checkbox"
+                            class="form-check-input"
+                            name="remember"
+                    />
+                    Remember me</label
+                >
+            </div>
+            <div class="form-group">
+                <button class="btn btn-primary btn-block" type="submit">
+                    Login
+                </button>
+             <a class="btn btn-info btn-block" href="/" role="button">Go back</a>
+
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

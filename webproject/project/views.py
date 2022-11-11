@@ -40,7 +40,7 @@ def user_login(request):
 
 
 @login_required
-def logoutuser(request):
+def user_logout(request):
     logout(request)
     return redirect('main')
 

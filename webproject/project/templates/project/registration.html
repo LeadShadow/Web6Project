@@ -1,0 +1,71 @@
+<link
+        rel="stylesheet"
+        href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css"
+        integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk"
+        crossorigin="anonymous"
+/>
+{% extends "project/base.html" %}
+
+{% block content %}
+    <div class="container">
+        <div class="row justify-content-center mb-3">
+            <h1>Registration</h1>
+        </div>
+        {% if error %}
+            <div>
+                <mark>{{ error }}</mark>
+            </div>
+        {% endif %}
+
+        <div class="row justify-content-center">
+            <form class="col-sm-8" method="post">
+                {% csrf_token %}
+                <!-- Form Name -->
+                <legend>Registration</legend>
+
+                <!-- Text input-->
+                <div class="form-group">
+                    <div class="input-group flex-nowrap">
+                        <span class="input-group-text col-sm-2" id="addon-wrapping">Nickname:</span>
+                        <input name="username" type="text" class="form-control" required="">
+                    </div>
+                </div>
+
+                <!-- Text input-->
+                <div class="form-group">
+                    <div class="input-group flex-nowrap">
+                        <span class="input-group-text col-sm-2" id="addon-wrapping">Email:</span>
+                        <input name="email" type="text" class="form-control" required="">
+                    </div>
+                </div>
+
+                <!-- Text input-->
+                <div class="form-group">
+                    <div class="input-group flex-nowrap">
+                        <span class="input-group-text col-sm-2" id="addon-wrapping">Password:</span>
+                        <input name="password1" type="password" class="form-control" required="">
+                    </div>
+                </div>
+
+                <!-- Text input-->
+                <div class="form-group">
+                    <div class="input-group flex-nowrap">
+                        <span class="input-group-text col-sm-2" id="addon-wrapping">Confirmation:</span>
+                        <input name="password2" type="password" class="form-control" required="">
+                    </div>
+                </div>
+
+                <!-- Button -->
+                {#            <div class="btn-group">#}
+                <button class="btn btn-primary btn-block" type="submit">
+                    Registration
+                </button>
+                <a class="btn btn-info btn-block" href="/" role="button">Go back</a>
+
+            </form>
+
+        </div>
+
+
+    </div>
+{% endblock %}

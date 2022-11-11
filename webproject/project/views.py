@@ -9,24 +9,24 @@ from .forms import TagForm, NoteForm
 
 # Create your views here.
 
-def signupuser(request):
+def user_signup(request):
     if request.method == 'GET':
-        return render(request, 'project/registration.html', {'form': UserCreationForm()})
+        return render(request, 'project/signup.html', {'form': UserCreationForm()})
     else:
         if request.POST['password1'] == request.POST['password2']:
             try:
                 user = User.objects.create_user(request.POST['username'], password=request.POST['password1'])
                 user.save()
-                return redirect('login')
+                return redirect('user_login')
             except IntegrityError as err:
-                return render(request, 'project/registration.html',
+                return render(request, 'project/signup.html',
                               {'form': UserCreationForm(), 'error': 'Username already exist!'})
-
         else:
-            return render(request, 'project/registration.html',
-                          {'form': UserCreationForm(), 'error': 'Passwords did not match'})
+            return render(request, 'project/signup.html',
+                          {'form': UserCreationForm(), 'error': 'Password did not match'})
 
-def loginuser(request):
+
+def user_login(request):
     if request.method == 'GET':
         return render(request, 'project/login.html', {'form': AuthenticationForm()})
     else:
@@ -36,6 +36,7 @@ def loginuser(request):
                           {'form': AuthenticationForm(), 'error': 'Username or password didn\'t match'})
         login(request, user)
         return redirect('main')
+
 
 
 @login_required

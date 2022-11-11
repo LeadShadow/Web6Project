@@ -4,8 +4,8 @@
     <meta charset="UTF-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <title></title>
-    {% load static %}
-    <link rel="shortcut icon" type="image/png" href="{% static 'favicon.ico' %}"/>
+{#    <link rel="icon" href="{{ url_for('static', filename='favicon.ico') }}" type="image/x-icon"/>#}
+{#    <link rel="stylesheet" href="{%  static 'style.css') }}"/>#}
     <link
             rel="stylesheet"
             href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css"
@@ -28,8 +28,8 @@
     </button>
     <div class="collapse navbar-collapse" id="navbarsExampleDefault">
         <ul class="navbar-nav ml-auto">
-            <li class="nav-item"><a class="nav-link" href="/webproject/project/static">Home</a></li>
-            {% if auth %}
+            <li class="nav-item"><a class="nav-link" href="/">Home</a></li>
+            {% if user.is_authenticated %}
             <li class="nav-item">
                 <a class="nav-link" href="/contacts">Contacts</a>
             </li>
@@ -56,14 +56,14 @@
             </li>
 
             <li class="nav-item">
-                <a class="nav-link" href="/logout">Sign out</a>
+                <a class="nav-link" href="/logout">Log Out</a>
             </li>
             {% else %}
             <li class="nav-item">
-                <a class="nav-link" href="/registration">Registration</a>
+                <a class="nav-link" href="/signup">Registration</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" href="/login">Sign in</a>
+                <a class="nav-link" href="/login">Log In</a>
             </li>
             {% endif %}
         </ul>

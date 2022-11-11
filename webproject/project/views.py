@@ -69,10 +69,10 @@ def tag(request):
             tag.save()
             return redirect(to='main')
         except ValueError as err:
-            return render(request, 'project/add_tag.html', {'form': TagForm(), 'error': err})
+            return render(request, 'project/add_tags.html', {'form': TagForm(), 'error': err})
         except IntegrityError as err:
-            return render(request, 'project/add_tag.html', {'form': TagForm(), 'error': 'Tag already exists!'})
-    return render(request, 'project/add_tag.html', {'form': TagForm()})
+            return render(request, 'project/add_tags.html', {'form': TagForm(), 'error': 'Tag already exists!'})
+    return render(request, 'project/add_tags.html', {'form': TagForm()})
 
 
 @login_required
@@ -118,6 +118,25 @@ def delete_note(request, note_id):
     note.delete()
     return redirect('main')
 
+@login_required
+def edit_note(request, note_id):
+    note = Note.objects.get(pk=note_id, user_id=request.user)
+    tags = Tag.objects.filter(user_id=request.user).all()
+    if request.method == 'POST':
+        try:
+            list_tags = request.POST.getlist('tags')
+            form = NoteForm(request.POST, instance=note)
+            new_note = form.save(commit=False)
+            new_note.user_id = request.user
+            new_note.save()
+            choice_tags = Tag.objects.filter(name__in=list_tags, user_id=request.user)
+            for tag in choice_tags.iterator():
+                new_note.tags.add(tag)
+            return redirect(to='main')
+        except ValueError as err:
+            return render(request, 'project/notes.html', {"tags": tags, 'form': NoteForm(), 'error': err})
+
+    return render(request, 'project/notes.html', {"tags": tags, 'form': NoteForm(instance=note)})
 
 @login_required
 def addressbook(request):

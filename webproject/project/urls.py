@@ -17,5 +17,6 @@ urlpatterns = [
     path('show_addressbook/', views.show_addressbook, name='show_addressbook'),
     path('delete_ab/<int:ab_id>', views.delete_ab, name='delete_ab'),
     path('done_ab/<int:ab_id>', views.set_done_ab, name='set_done_ab'),
-    path('note_edit/<int:note_id>', views.edit_note, name='note_edit')
+    path('note_edit/<int:note_id>', views.edit_note, name='note_edit'),
+    path('info_collector/', views.parser, name='parser')
 ]

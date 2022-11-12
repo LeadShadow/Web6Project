@@ -5,7 +5,7 @@
         crossorigin="anonymous"
 />
 
-{% extends "base.html" %}
+{% extends "./base.html" %}
 
 {% block content %}
 <div class="container">
@@ -22,7 +22,7 @@
         />
     </div>
     <div class="row justify-content-center">
-        <form class="col-sm-6" action="/contacts/edit/{{contact.id}}" method="post">
+        <form class="col-sm-6" action="" method="POST">
             <div class="form-group">
                 <div class="input-group flex-nowrap">
                     <div class="input-group-prepend">
@@ -106,6 +106,7 @@
                         Update
                     </button>
                 </div>
+            </div>
         </form>
     </div>
 </div>

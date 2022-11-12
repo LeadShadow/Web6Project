@@ -56,7 +56,7 @@ def main(request):
 def detail_note(request, note_id):
     note = get_object_or_404(Note, pk=note_id, user_id=request.user)
     note.tag_list = ', '.join([str(name) for name in note.tags.all()])
-    return render(request, 'project/notes.html', {"note": note})
+    return render(request, 'project/detail_note.html', {"note": note})
 
 
 @login_required

@@ -1,13 +1,17 @@
+from django.contrib import messages
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.forms import AuthenticationForm, UserCreationForm
 from django.contrib.auth import login, authenticate, logout
 from django.contrib.auth.decorators import login_required
 from django.db import IntegrityError
-from .models import Tag, Note, User, Files
-from .forms import TagForm, NoteForm
+from django.views.decorators.csrf import csrf_exempt
 
+from .models import Tag, Note, User, Files, AddressBook
+from .forms import TagForm, NoteForm, ABForm
 
 # Create your views here.
+from .validation_ab import Phone, Birthday, Email, DateIsNotValid
+
 
 def user_signup(request):
     if request.method == 'GET':
@@ -138,9 +142,40 @@ def edit_note(request, note_id):
 
     return render(request, 'project/notes.html', {"tags": tags, 'form': NoteForm(instance=note)})
 
+
+@csrf_exempt
 @login_required
 def addressbook(request):
-    pass
+    form = ABForm(request.POST)
+    if request.method == 'POST':
+        try:
+            name = request.POST['fullname']
+            print('1')
+            phone = Phone(request.POST['phone']).value
+            print('1')
+            birthday = Birthday(request.POST['dob']).value
+            print('1')
+            email = Email(request.POST['email']).value
+            print('1')
+            address = request.POST['address']
+            print('1')
+            ab = AddressBook(name=name, phone=phone, birthday=birthday, email=email, address=address,
+                             user_id=request.user)
+            ab.save()
+            print('dawaw')
+            messages.success(request, 'Contact add successfully')
+        except ValueError:
+            messages.error(request, 'Invalid phone try 10 or 12 numbers')
+            return render(request, 'project/contact_edit.html', {'form': form})
+        except DateIsNotValid:
+            messages.error(request, 'Invalid birthday, try: year-month-day')
+            return render(request, 'project/contact_edit.html', {'form': form})
+        except AttributeError:
+            messages.error(request, 'Invalid email, try: symbols(,.@ a-z 0-9)')
+            return render(request, 'project/contact_edit.html', {'form': form})
+        return redirect('show_addressbook')
+    else:
+        return render(request, 'project/contact_edit.html', {'form': form})
 
 
 @login_required
@@ -160,7 +195,10 @@ def set_done_ab(request, note_id):
 
 @login_required
 def show_addressbook(request):
-    pass
+    contacts = AddressBook.objects.filter(user_id=request.user).all()
+    if request.method == 'GET':
+        return render(request, 'project/contacts.html', {'contacts': contacts})
+    return render(request, 'project/contacts.html')
 
 
 @login_required

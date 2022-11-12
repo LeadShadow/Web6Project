@@ -5,7 +5,7 @@
         crossorigin="anonymous"
 />
 
-{% extends "base.html" %}
+{% extends "./base.html" %}
 
 {% block content %}
 <div class="container">
@@ -29,13 +29,7 @@
     <div class="row mb-3">
         <h1>Contacts</h1>
     </div>
-    {% with messages = get_flashed_messages() %}
-    {% if messages %}
-    {% for message in messages %}
-    <div class="alert alert-info">{{message}}</div>
-    {% endfor %}
-    {% endif %}
-    {% endwith %}
+    <div class="alert alert-info"></div>
     <div class="row">
         {% for contact in contacts %}
         <div class="col-md-4">
@@ -52,9 +46,9 @@
                                 style="object-fit: contain"/>
                         </br>
                         </br>
-                        <p class="card-title"><strong>Fullname: </strong> {{contact.fullname}}<strong>{{age}}</strong>
+                        <p class="card-title"><strong>Fullname: </strong> {{contact.name}}</p>
                         </p>
-                        <p class="card-text"><strong>DOB: </strong>{{contact.dob}} ({{days_to_birthday}})</p>
+                        <p class="card-text"><strong>Birthday: </strong>{{contact.birthday}}</p>
                         <p class="card-text"><strong>Address: </strong>{{contact.address}}</p>
                         <p class="card-text"><strong>Phone: </strong>{{contact.phone}}</p>
                         <p class="card-text"><strong>Email: </strong>{{contact.email}}</p>
@@ -72,3 +66,4 @@
         </div>
     </div>
     {% endblock %}
+</div>

@@ -13,3 +13,9 @@ class NoteForm(ModelForm):
         model = Note
         fields = ['name', 'description']
         exclude = ['tags']
+
+
+class ABForm(ModelForm):
+    class Meta:
+        model = AddressBook
+        fields = ['name']

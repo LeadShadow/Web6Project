@@ -244,80 +244,139 @@ def download_files(request):
 
 @login_required
 def parser(request):
-    # # CURRENCY
-    # # https://minfin.com.ua/currency/
-    # data = []
-    #
-    # base_url = 'https://minfin.com.ua/currency/'
-    # response = requests.get(base_url)
-    # soup = BeautifulSoup(response.text, 'html.parser')
-    # print(soup)
-    # content = soup.find('table',
-    #                     class_='table-response mfm-table mfcur-table-lg mfcur-table-lg-currency has-no-tfoot').find_all(
-    #     'tr')
-    # for element in content:
-    #     result = {}
-    #     try:
-    #         currency_name = element.find('td', class_='mfcur-table-cur').find('a').text
-    #     except AttributeError:
-    #         continue
-    #     result.update({"currency_name": currency_name})
-    #     rate = element.find('td',
-    #                         attrs={"class": "mfm-text-nowrap", "data-title": "Черный рынок"}).text.strip().replace('\n',
-    #                                                                                                                '')
-    #     print(rate)
-    #     buy = rate.split('/')[0]
-    #     sale = rate.split('/')[1]
-    #     result.update({"buy": buy})
-    #     result.update({"sale": sale})
-    #     result.update({"source": base_url})
-    #     data.append(result)
-    #
-    #     currency = json.dumps(data, ensure_ascii=False)
+    # CURRENCY
+    # https://https://finance.i.ua/
+    currency = []
+    parsing_error = False
+
+    base_url = 'https://finance.i.ua/'
+    response = requests.get(base_url)
+    soup = BeautifulSoup(response.text, 'html.parser')
+    try:
+        content = soup.find('div', class_='widget-currency_cash').find('table',
+                                                                       class_='table table-data -important').find_all(
+            'tr')
+    except AttributeError:
+        parsing_error = True
+    if not parsing_error:
+        for element in content:
+            result = {}
+            try:
+                currency_name = element.find('th').text
+                result.update({"currency_name": currency_name})
+                rate_el = element.find_all('span', class_='')
+                rate = []
+                for _ in rate_el:
+                    rate.append(_.text)
+                result.update({"buy": rate[0]})
+                result.update({"sale": rate[1]})
+                currency.append(result)
+            except AttributeError:
+                parsing_error = True
 
     # NEWS
     news = []
+
     # https://ua.korrespondent.net/
+    parsing_error = False
     base_url = 'https://ua.korrespondent.net/'
+    data_source = 'korrespondent.net'
     response = requests.get(base_url)
     soup = BeautifulSoup(response.text, 'html.parser')
-    content = soup.find('div', class_='time-articles').find_all('div', class_='article')
-    for element in content:
-        result = {}
-        dtime = element.find('div', attrs={"class": "article__time"}).text
-        date_time = datetime(datetime.now().year, datetime.now().month, datetime.now().day, int(dtime.split(":")[0]),
-                             int(dtime.split(":")[1]))
-        result.update({"dtime": date_time})
-        title = element.find('div', attrs={"class": "article__title"}).text
-        result.update({"title": title})
-        href = element.find('div', attrs={"class": "article__title"}).find('a').get('href')
-        result.update({"href": href})
-        result.update({"source": base_url})
-        news.append(result)
+    try:
+        content = soup.find('div', class_='time-articles').find_all('div', class_='article')
+    except AttributeError:
+        parsing_error = True
+    if not parsing_error:
+        for element in content:
+            result = {}
+            try:
+                if element['class'][0] == 'time-articles__date':
+                    print('-------------------------------------------------')
+                    break
+            except KeyError:
+                continue
+            dtime = element.find('div', class_="article__time").text
+            date_time = datetime(datetime.now().year, datetime.now().month, datetime.now().day,
+                                 int(dtime.split(":")[0]),
+                                 int(dtime.split(":")[1]))
+            result.update({"dtime": date_time})
+            title = element.find('div', attrs={"class": "article__title"}).text
+            result.update({"title": title})
+            href = element.find('div', attrs={"class": "article__title"}).find('a').get('href')
+            result.update({"href": href})
+            result.update({"source": data_source})
+            news.append(result)
 
     # https://news.liga.net/
+    parsing_error = False
     base_url = 'https://news.liga.net/'
+    data_source = 'liga.net'
     response = requests.get(base_url)
     soup = BeautifulSoup(response.text, 'html.parser')
-    content = soup.find('div', class_='custom-tab-content active').find_all('div', class_='news-nth')
-    for element in content:
-        result = {}
-        try:
-            dtime = element.find('div', attrs={"class": "news-nth-time"}).text
-        except AttributeError:
-            continue
-        date_time = datetime(datetime.now().year, datetime.now().month, datetime.now().day, int(dtime.split(":")[0]),
-                             int(dtime.split(":")[1]))
-        result.update({"dtime": date_time})
-        title = element.find('a').text
-        result.update({"title": title})
-        href = element.find('a').get('href')
-        result.update({"href": href})
-        result.update({"source": base_url})
-        news.append(result)
+    try:
+        content = soup.find('div', id='all-news').find_all('div')
+    except AttributeError:
+        parsing_error = True
+    if not parsing_error:
+        for element in content:
+            result = {}
+            try:
+                if element['class'][0] == 'time-divider':
+                    break
+            except KeyError:
+                continue
+            try:
+                dtime = element.find('div', attrs={"class": "news-nth-time"}).text
+            except AttributeError:
+                continue
+            date_time = datetime(datetime.now().year, datetime.now().month, datetime.now().day,
+                                 int(dtime.split(":")[0]),
+                                 int(dtime.split(":")[1]))
+            result.update({"dtime": date_time})
+            title = element.find('a').text
+            result.update({"title": title})
+            href = element.find('a').get('href')
+            result.update({"href": href})
+            result.update({"source": data_source})
+            news.append(result)
 
-    # news = json.dumps(data, ensure_ascii=False)
-    weather = []
-    currency = []
+    # https://www.pravda.com.ua/news/
+    parsing_error = False
+    base_url = 'https://www.pravda.com.ua/news/'
+    data_source = 'Українська правда'
+    response = requests.get(base_url)
+    soup = BeautifulSoup(response.text, 'html.parser')
+    try:
+        content = soup.find('div', class_='container_sub_news_list_wrapper mode1').find_all('div',
+                                                                                            class_='article_news_list')
+    except AttributeError:
+        parsing_error = True
 
-    return render(request, 'project/info.html', {"news": news, 'weather': weather, 'currency': currency})
+    if not parsing_error:
+        for element in content:
+            result = {}
+            dtime = element.find('div', class_="article_time").text
+            date_time = datetime(datetime.now().year, datetime.now().month, datetime.now().day,
+                                 int(dtime.split(":")[0]),
+                                 int(dtime.split(":")[1]))
+            result.update({"dtime": date_time})
+            title = element.find('div', attrs={"class": "article_header"}).text
+            result.update({"title": title})
+            href = element.find('div', attrs={"class": "article_header"}).find('a').get('href')
+            result.update({"href": href})
+            result.update({"source": data_source})
+            news.append(result)
+
+    sorted_news = sorted(news, key=lambda d: d['dtime'])
+    sorted_news.reverse()
+
+    for el in sorted_news:
+        for k, v in el.items():
+            if k == 'dtime':
+                try:
+                    el.update({"dtime": v.strftime("%H:%M")})
+                except:
+                    print(k, v)
+
+    return render(request, 'project/info.html', {"news": sorted_news, 'currency': currency})

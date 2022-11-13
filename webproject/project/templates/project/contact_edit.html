@@ -8,6 +8,16 @@
 {% extends "./base.html" %}
 
 {% block content %}
+{% if contact %}
+{% if messages %}
+{% for msg in messages %}
+<div class="alert alert-danger d-flex align-items-center" role="alert">
+  <div>
+    {{ msg }}
+  </div>
+</div>
+{% endfor %}
+{% endif %}
 <div class="container">
     <div class="row justify-content-center mb-3">
         <h1>Edit contact</h1>
@@ -33,7 +43,7 @@
                            type="text"
                            placeholder="Fullname"
                            name="fullname"
-                           value="{{contact.fullname}}"
+                           value="{{contact.name}}"
                     />
                 </div>
             </div>
@@ -48,7 +58,7 @@
                            type="date"
                            placeholder="DOB"
                            name="dob"
-                           value="{{contact.dob}}"
+                           value="{{contact.birthday}}"
                     />
                 </div>
             </div>
@@ -110,4 +120,117 @@
         </form>
     </div>
 </div>
+{% else %}
+{% if messages %}
+{% for msg in messages %}
+<div class="alert alert-danger d-flex align-items-center" role="alert">
+  <div>
+    {{ msg }}
+  </div>
+</div>
+{% endfor %}
+{% endif %}
+<div class="container">
+    <div class="row justify-content-center mb-3">
+        <h1>Add contact</h1>
+    </div>
+    <div class="row justify-content-center mb-3">
+        <img
+                src="{{contact.path}}"
+                width="225"
+                height="225"
+                alt="Avatar photo here"
+                style="object-fit: contain"
+        />
+    </div>
+    <div class="row justify-content-center">
+        <form class="col-sm-6" action="" method="POST">
+            <div class="form-group">
+                <div class="input-group flex-nowrap">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text" id="addon-wrapping">Fullname: </span>
+                    </div>
+                    <input id="colFormLabelFullname"
+                           class="form-control col-sm-12"
+                           type="text"
+                           placeholder="Fullname"
+                           name="fullname"
+                           value=""
+                    />
+                </div>
+            </div>
+
+            <div class="form-group">
+                <div class="input-group flex-nowrap">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text" id="addon-wrapping">DOB: </span>
+                    </div>
+                    <input id="colFormLabelDOB"
+                           class="form-control col-sm-12"
+                           type="date"
+                           placeholder="DOB"
+                           name="dob"
+                           value=""
+                    />
+                </div>
+            </div>
+
+
+            <div class="form-group">
+                <div class="input-group flex-nowrap">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text" id="addon-wrapping">Address: </span>
+                    </div>
+                    <input id="colFormLabelAddress"
+                           class="form-control col-sm-12"
+                           type="text"
+                           placeholder="Address"
+                           name="address"
+                           value=""
+                    />
+                </div>
+            </div>
+
+            <div class="form-group">
+                <div class="input-group flex-nowrap">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text" id="addon-wrapping">Phone: </span>
+                    </div>
+                    <input id="colFormLabelPhone"
+                           class="form-control col-sm-12"
+                           type="text"
+                           placeholder="Phone"
+                           name="phone"
+                           value=""
+                    />
+                </div>
+            </div>
+
+            <div class="form-group">
+                <div class="input-group flex-nowrap">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text" id="addon-wrapping">Email: </span>
+                    </div>
+                    <input id="colFormLabelEmail"
+                           class="form-control col-sm-12"
+                           type="text"
+                           placeholder="Email"
+                           name="email"
+                           value=""
+                    />
+                </div>
+            </div>
+
+            <div class="form-group">
+
+                <div class="form-group">
+                    <button class="btn btn-primary col-sm-12" type="submit">
+                        Submit
+                    </button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+{% endif %}
 {% endblock %}

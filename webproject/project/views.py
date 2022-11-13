@@ -12,7 +12,7 @@ from .models import Tag, Note, User, Files, AddressBook
 from .forms import TagForm, NoteForm, ABForm
 
 # Create your views here.
-from .validation_ab import Phone, Birthday, Email, DateIsNotValid
+from .validation_ab import Phone, Birthday, Email, DateIsNotValid, DateVeryBig
 import requests
 from bs4 import BeautifulSoup
 import json
@@ -46,7 +46,6 @@ def user_login(request):
                           {'form': AuthenticationForm(), 'error': 'Username or password didn\'t match'})
         login(request, user)
         return redirect('main')
-
 
 
 @login_required
@@ -116,6 +115,7 @@ def show_notes(request):
         print(sort)
         return render(request, 'project/notes.html', {'back': '/'})
 
+
 @login_required
 def set_done_note(request, note_id):
     Note.objects.filter(pk=note_id, user_id=request.user).update(done=True)
@@ -127,6 +127,7 @@ def delete_note(request, note_id):
     note = Note.objects.get(pk=note_id, user_id=request.user)
     note.delete()
     return redirect('main')
+
 
 @login_required
 def edit_note(request, note_id):
@@ -156,20 +157,18 @@ def addressbook(request):
     if request.method == 'POST':
         try:
             name = request.POST['fullname']
-            print('1')
             phone = Phone(request.POST['phone']).value
-            print('1')
             birthday = Birthday(request.POST['dob']).value
-            print('1')
+            if birthday > datetime.now():
+                print('12')
+                raise DateVeryBig
             email = Email(request.POST['email']).value
-            print('1')
             address = request.POST['address']
-            print('1')
             ab = AddressBook(name=name, phone=phone, birthday=birthday, email=email, address=address,
                              user_id=request.user)
             ab.save()
-            print('dawaw')
-            messages.success(request, 'Contact add successfully')
+            storage = messages.get_messages(request)
+            storage.used = True
         except ValueError:
             messages.error(request, 'Invalid phone try 10 or 12 numbers')
             return render(request, 'project/contact_edit.html', {'form': form})
@@ -179,24 +178,55 @@ def addressbook(request):
         except AttributeError:
             messages.error(request, 'Invalid email, try: symbols(,.@ a-z 0-9)')
             return render(request, 'project/contact_edit.html', {'form': form})
-        return redirect('show_addressbook')
+        except DateVeryBig:
+            messages.error(request, 'This date bigger than present date')
+            return render(request, 'project/contact_edit.html', {'form': form})
+        return redirect('show_contacts')
     else:
         return render(request, 'project/contact_edit.html', {'form': form})
 
 
+@csrf_exempt
 @login_required
-def edit_ab(request, ad_id):
-    pass
+def edit_ab(request, ab_id):
+    contact = AddressBook.objects.get(id=ab_id, user_id=request.user)
+    form = ABForm(request.POST)
+    if request.method == 'POST':
+        try:
+            name = request.POST['fullname']
+            phone = Phone(request.POST['phone']).value
+            birthday = Birthday(request.POST['dob']).value
+            if birthday > datetime.now():
+                raise DateVeryBig
+            email = Email(request.POST['email']).value
+            address = request.POST['address']
+            contact.name, contact.phone, contact.birthday, contact.email, contact.address = name, phone, birthday, email, address
+            contact.save()
+            storage = messages.get_messages(request)
+            storage.used = True
+            return redirect('show_contacts')
+        except ValueError:
+            messages.error(request, 'Invalid phone try 10 or 12 numbers')
+            return render(request, 'project/contact_edit.html', {'contact': contact, 'form': form})
+        except DateIsNotValid:
+            messages.error(request, 'Invalid birthday, try: year-month-day')
+            return render(request, 'project/contact_edit.html', {'contact': contact, 'form': form})
+        except AttributeError:
+            messages.error(request, 'Invalid email, try: symbols(,.@ a-z 0-9)')
+            return render(request, 'project/contact_edit.html', {'contact': contact, 'form': form})
+        except DateVeryBig:
+            messages.error(request, 'This date bigger than present date')
+            return render(request, 'project/contact_edit.html', {'contact': contact, 'form': form})
+    else:
+        return render(request, 'project/contact_edit.html', {'contact': contact, 'form': form})
 
 
 @login_required
-def delete_ab(request, ad_id):
-    pass
-
-
-@login_required
-def set_done_ab(request, note_id):
-    pass
+def delete_ab(request, ab_id):
+    contact = AddressBook.objects.filter(id=ab_id).first()
+    contact.delete()
+    if request.method == 'GET':
+        return redirect('show_contacts')
 
 
 @login_required

@@ -44,7 +44,10 @@ class AddressBook(models.Model):
 
 
 class Files(models.Model):
-    title = models.CharField(max_length=50)
-    upload = models.FileField(upload_to="media")
+    name = models.CharField(max_length=80, null=True)
+    up_id = models.CharField(max_length=35, null=True)
+    type = models.CharField(max_length=50, null=True)
+    size = models.IntegerField(default=0)
+    up_time = models.DateTimeField(default=datetime.datetime.now())
     user_id = models.ForeignKey(User, on_delete=models.CASCADE)
 

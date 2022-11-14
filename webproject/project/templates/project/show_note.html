@@ -9,8 +9,32 @@
 {% extends "project/base.html" %}
 
 {% block content %}
+    <div class="container">
+    <form class="form-horizontal">
+        <fieldset>
 
-  {% for note in notes%}
+            <div class="form-group">
+                <label class="col-md-4 control-label" for="selectbasic">Order by</label>
+                <div class="col-md-4">
+                    <select id="selectbasic" name="selectbasic" class="form-control">
+                        <option value="name">Date</option>
+                    </select>
+                </div>
+            </div>
+
+        </fieldset>
+    </form>
+
+  <div class="row mb-3">
+        <h1>Your Notes</h1>
+    </div>
+    <div class="alert alert-info"></div>
+    <div class="row">
+    {% for note in notes%}
+      <div class="col-md-4">
+      <div class="accordion" id="accordionExample">
+      <div class="card mb-4 shadow-sm">
+      <div class="card-body">
       <ul>
         <li>
         <p>Tags: <small>
@@ -36,5 +60,9 @@
           {% endif %}
         </li>
       </ul>
+      </div>
+      </div>
+      </div>
+      </div>
       {% endfor %}
 {% endblock %}

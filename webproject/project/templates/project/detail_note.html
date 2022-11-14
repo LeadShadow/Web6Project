@@ -20,7 +20,9 @@
           <a href="{% url 'detail_note' %}" role="button" class="outline"
             >{{ note.created }},
               {{note.name}},
-              {{note.description}}</a
+              {{note.description}},
+              {{ note.status }}
+          </a
           >
           <a href="{% url 'set_done_note' note.id %}" role="button">Mark Done</a>
           <a href="{% url 'delete_note' note.id %}" role="button" class="contrast"

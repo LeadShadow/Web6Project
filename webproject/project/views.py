@@ -65,7 +65,7 @@ def main(request):
 def detail_note(request, note_id):
     note = get_object_or_404(Note, pk=note_id, user_id=request.user)
     note.tag_list = ', '.join([str(name) for name in note.tags.all()])
-    return render(request, 'project/notes.html', {"note": note})
+    return render(request, 'project/detail_note.html', {"note": note})
 
 
 @login_required
@@ -100,20 +100,17 @@ def note(request):
                 new_note.tags.add(tag)
             return redirect(to='main')
         except ValueError as err:
-            return render(request, 'project/notes.html', {"tags": tags, 'form': NoteForm(), 'error': err})
+            return render(request, 'project/add_note.html', {"tags": tags, 'form': NoteForm(), 'error': err})
 
-    return render(request, 'project/notes.html', {"tags": tags, 'form': NoteForm()})
+    return render(request, 'project/add_note.html', {"tags": tags, 'form': NoteForm()})
 
 
 @login_required
 def show_notes(request):
-    if request.method == 'GET':
-        notes = Note.objects.all()
-        return render(request, 'project/notes.html', {'back': '/', 'notes': notes})
-    else:
-        sort = request.POST['sort']
-        print(sort)
-        return render(request, 'project/notes.html', {'back': '/'})
+    notes = []
+    if request.user.is_authenticated:
+        notes = Note.objects.filter(user_id=request.user).all()
+    return render(request, 'project/show_note.html', {"notes": notes})
 
 
 @login_required
@@ -145,9 +142,9 @@ def edit_note(request, note_id):
                 new_note.tags.add(tag)
             return redirect(to='main')
         except ValueError as err:
-            return render(request, 'project/notes.html', {"tags": tags, 'form': NoteForm(), 'error': err})
+            return render(request, 'project/add_note.html', {"tags": tags, 'form': NoteForm(), 'error': err})
 
-    return render(request, 'project/notes.html', {"tags": tags, 'form': NoteForm(instance=note)})
+    return render(request, 'project/add_note.html', {"tags": tags, 'form': NoteForm(instance=note)})
 
 
 @csrf_exempt

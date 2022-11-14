@@ -1,0 +1,40 @@
+<link
+        rel="stylesheet"
+        href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css"
+        integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk"
+        crossorigin="anonymous"
+/>
+
+
+{% extends "project/base.html" %}
+
+{% block content %}
+
+  {% for note in notes%}
+      <ul>
+        <li>
+        <p>Tags: <small>
+        {{ note.tags.all|join:", " }}
+        </small></p>
+          {%if not note.done%}
+          <a href="{% url 'detail_note' note.id %}" role="button" class="outline"
+            >{{ note.created }}:
+               {{note.name}} -
+              {{note.description}} >>
+              {{ note.status }}
+          </a
+          >
+          <a href="{% url 'set_done_note' note.id %}" role="button"> Mark Done</a>
+          <a href="{% url 'delete_note' note.id %}" role="button" class="contrast"
+            >Delete note</a
+          >
+          {% else %}
+
+          <a href="{% url 'detail_note' note.id %}" role="button" class="secondary"
+            ><s>{{note.name}}</s></a
+          >
+          {% endif %}
+        </li>
+      </ul>
+      {% endfor %}
+{% endblock %}

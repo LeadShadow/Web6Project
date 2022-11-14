@@ -13,10 +13,14 @@
   {% for note in notes%}
       <ul>
         <li>
+        <p>Tags: <small>
+        {{ note.tags.all|join:", " }}
+        </small></p>
           {%if not note.done%}
           <a href="{% url 'detail_note' %}" role="button" class="outline"
-            >{{note.name}},
-          {{note.description}}</a
+            >{{ note.created }},
+              {{note.name}},
+              {{note.description}}</a
           >
           <a href="{% url 'set_done_note' note.id %}" role="button">Mark Done</a>
           <a href="{% url 'delete_note' note.id %}" role="button" class="contrast"

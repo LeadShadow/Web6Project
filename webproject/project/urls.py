@@ -12,10 +12,10 @@ urlpatterns = [
     path('signup/', views.user_signup, name='user_signup'),
     path('login/', views.user_login, name='user_login'),
     path('logout/', views.user_logout, name='user_logout'),
-    path('addressbook/', views.addressbook, name='addressbook'),
-    path('edit_ab/<int:ab_id>', views.edit_ab, name='edit_ab'),
-    path('show_addressbook/', views.show_addressbook, name='show_addressbook'),
-    path('delete_ab/<int:ab_id>', views.delete_ab, name='delete_ab'),
-    path('done_ab/<int:ab_id>', views.set_done_ab, name='set_done_ab'),
-    path('note_edit/<int:note_id>', views.edit_note, name='note_edit')
+    path('contact/', views.addressbook, name='contact'),
+    path('contacts/edit/<int:ab_id>', views.edit_ab, name='edit_ab'),
+    path('show_contacts/', views.show_addressbook, name='show_contacts'),
+    path('contacts/delete/<int:ab_id>', views.delete_ab, name='delete_ab'),
+    path('note_edit/<int:note_id>', views.edit_note, name='note_edit'),
+    path('info_collector/', views.parser, name='parser')
 ]

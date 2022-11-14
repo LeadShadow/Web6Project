@@ -5,10 +5,10 @@
         crossorigin="anonymous"
 />
 
-{% extends "base.html" %}
+{% extends "./base.html" %}
 
 {% block content %}
-<div class="container">
+    <div class="container">
     <form class="form-horizontal">
         <fieldset>
 
@@ -29,22 +29,16 @@
     <div class="row mb-3">
         <h1>Contacts</h1>
     </div>
-    {% with messages = get_flashed_messages() %}
-    {% if messages %}
-    {% for message in messages %}
-    <div class="alert alert-info">{{message}}</div>
-    {% endfor %}
-    {% endif %}
-    {% endwith %}
+    <div class="alert alert-info"></div>
     <div class="row">
-        {% for contact in contacts %}
+    {% for contact in contacts %}
         <div class="col-md-4">
             <div class="accordion" id="accordionExample">
                 <div class="card mb-4 shadow-sm">
                     <div class="card-body">
                         <img
                                 class="bd-placeholder-img card-img-top"
-                                src="{{pic.path}}"
+                                src="{{ pic.path }}"
                                 width="100%"
                                 height="225"
                                 alt="avatar photo here"
@@ -52,23 +46,25 @@
                                 style="object-fit: contain"/>
                         </br>
                         </br>
-                        <p class="card-title"><strong>Fullname: </strong> {{contact.fullname}}<strong>{{age}}</strong>
+                        <p class="card-title"><strong>Fullname: </strong> {{ contact.name }}</p>
                         </p>
-                        <p class="card-text"><strong>DOB: </strong>{{contact.dob}} ({{days_to_birthday}})</p>
-                        <p class="card-text"><strong>Address: </strong>{{contact.address}}</p>
-                        <p class="card-text"><strong>Phone: </strong>{{contact.phone}}</p>
-                        <p class="card-text"><strong>Email: </strong>{{contact.email}}</p>
+                        <p class="card-text"><strong>Birthday: </strong>{{ contact.birthday }}</p>
+                        <p class="card-text"><strong>Address: </strong>{{ contact.address }}</p>
+                        <p class="card-text"><strong>Phone: </strong>{{ contact.phone }}</p>
+                        <p class="card-text"><strong>Email: </strong>{{ contact.email }}</p>
                         <div class="d-flex justify-content-between align-items-center">
                             <div class="btn-group">
-                                <a class="btn btn-outline-info" href="/contacts/edit/{{contact.id}}">Edit</a>
-                                <a class="btn btn-outline-danger" href="/contacts/delete/{{contact.id}}">Delete</a>
+                                <a class="btn btn-outline-info" href="/contacts/edit/{{ contact.id }}">Edit</a>
+                                <a class="btn btn-outline-danger" href="/contacts/delete/{{ contact.id }}">Delete</a>
 
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
-            {% endfor %}
         </div>
-    </div>
-    {% endblock %}
+    {% endfor %}
+{% endblock %}
+</div>
+
+</div>

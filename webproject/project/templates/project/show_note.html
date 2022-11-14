@@ -42,10 +42,10 @@
         </small></p>
           {%if not note.done%}
           <a href="{% url 'detail_note' note.id %}" role="button" class="outline"
-            >{{ note.created }}:
-               {{note.name}} -
-              {{note.description}} >>
-              {{ note.status }}
+            ><p>{{ note.created }}: </p>
+              <p>{{note.name}} </p>
+              <p>{{note.description}} </p>
+              <p>{{ note.status }} </p>
           </a
           >
           <a href="{% url 'set_done_note' note.id %}" role="button"> Mark Done</a>

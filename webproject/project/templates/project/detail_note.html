@@ -18,13 +18,13 @@
         </small></p>
           {%if not note.done%}
           <a href="{% url 'detail_note' %}" role="button" class="outline"
-            >{{ note.created }},
-              {{note.name}},
-              {{note.description}},
+            >{{ note.created }}:
+               {{note.name}} -
+              {{note.description}} >>
               {{ note.status }}
           </a
           >
-          <a href="{% url 'set_done_note' note.id %}" role="button">Mark Done</a>
+          <a href="{% url 'set_done_note' note.id %}" role="button"> Mark Done</a>
           <a href="{% url 'delete_note' note.id %}" role="button" class="contrast"
             >Delete note</a
           >

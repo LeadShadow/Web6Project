@@ -100,9 +100,9 @@ def note(request):
                 new_note.tags.add(tag)
             return redirect(to='main')
         except ValueError as err:
-            return render(request, 'project/notes.html', {"tags": tags, 'form': NoteForm(), 'error': err})
+            return render(request, 'project/add_note.html', {"tags": tags, 'form': NoteForm(), 'error': err})
 
-    return render(request, 'project/notes.html', {"tags": tags, 'form': NoteForm()})
+    return render(request, 'project/add_note.html', {"tags": tags, 'form': NoteForm()})
 
 
 @login_required
@@ -110,7 +110,7 @@ def show_notes(request):
     notes = []
     if request.user.is_authenticated:
         notes = Note.objects.filter(user_id=request.user).all()
-    return render(request, 'project/detail_note.html', {"notes": notes})
+    return render(request, 'project/show_note.html', {"notes": notes})
 
 
 @login_required
@@ -142,9 +142,9 @@ def edit_note(request, note_id):
                 new_note.tags.add(tag)
             return redirect(to='main')
         except ValueError as err:
-            return render(request, 'project/notes.html', {"tags": tags, 'form': NoteForm(), 'error': err})
+            return render(request, 'project/add_note.html', {"tags": tags, 'form': NoteForm(), 'error': err})
 
-    return render(request, 'project/notes.html', {"tags": tags, 'form': NoteForm(instance=note)})
+    return render(request, 'project/add_note.html', {"tags": tags, 'form': NoteForm(instance=note)})
 
 
 @csrf_exempt

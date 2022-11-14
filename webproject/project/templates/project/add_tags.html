@@ -5,54 +5,27 @@
         crossorigin="anonymous"
 />
 
-{% extends "base.html" %}
+{% extends "project/base.html" %}
 
 {% block content %}
-<div class="container">
-    <div class="row justify-content-center mb-3">
-        <h1>Add tags</h1>
-    </div>
 
-    <div class="row justify-content-center">
-        <form class="col-sm-6" action="/tags/add_new" method="post">
-            <div class="form-group">
-                <div class="input-group flex-nowrap">
-                    <div class="input-group-prepend">
-                        <span class="input-group-text" id="addon-wrapping">Tag name: </span>
-                    </div>
-                    <input id="colFormLabelTag_Name"
-                           class="form-control col-sm-12"
-                           type="text"
-                           placeholder="tag_name"
-                           name="tag_name"
-                    />
-                </div>
-            </div>
+      {% if error %}
+      <div>
+        <mark>{{ error }}</mark>
+      </div>
+      {% endif %}
+      <form method="POST" action="{% url 'usertag' %}">
+        {% csrf_token %}
+        <div style="padding: 10px">
+          <label
+            >Enter the tag name:
+            <input type="text" name="name" required />
+          </label>
+        </div>
+        <div class="grid">
+          <button type="submit">Submit</button>
+          <button type="reset" class="secondary">Reset</button>
+        </div>
+      </form>
 
-            <div class="form-group">
-                <button class="btn btn-primary col-sm-12" type="submit">
-                    Add tag
-                </button>
-            </div>
-
-            </br>
-            </br>
-            </br>
-            <div class="form-group">
-                <span>Existing tags:</span>
-                <div class="input-group flex-nowrap">
-                    <div class="input-group-prepend">
-                        <span class="input-group-text" id="addon-wrapping">Tags: </span>
-                    </div>
-                    <select id="selectmultiple" name="tags" class="form-control" multiple="multiple">
-                        <option value="1">Option one</option>
-                        <option value="2">Option two</option>
-                        <option value="3">Option three</option>
-                    </select>
-                </div>
-            </div>
-
-        </form>
-    </div>
-</div>
 {% endblock %}

@@ -1,6 +1,5 @@
 body,
 html {
-  padding: 5rem 50px 50px;
   font: 16px "Lucida Grande", Helvetica, Arial, sans-serif;
   display: flex;
   height: 100%;
@@ -11,11 +10,11 @@ html {
 }
 
 a {
-  color: #ffe4e1;
+  color: #00B7FF;
 }
 
 h1 {
-  color: #8095e8;
+  color: #0DCA1B;
 }
 
 .template {

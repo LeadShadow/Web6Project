@@ -98,13 +98,10 @@ def note(request):
 
 @login_required
 def show_notes(request):
-    if request.method == 'GET':
-        notes = Note.objects.all()
-        return render(request, 'project/notes.html', {'back': '/', 'notes': notes})
-    else:
-        sort = request.POST['sort']
-        print(sort)
-        return render(request, 'project/notes.html', {'back': '/'})
+    notes = []
+    if request.user.is_authenticated:
+        notes = Note.objects.filter(user_id=request.user).all()
+    return render(request, 'project/detail_note.html', {"notes": notes})
 
 @login_required
 def set_done_note(request, note_id):

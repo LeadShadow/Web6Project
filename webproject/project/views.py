@@ -360,8 +360,9 @@ def parser(request):
             result.update({"dtime": date_time})
             title = element.find('div', attrs={"class": "article_header"}).text
             result.update({"title": title})
-            href = element.find('div', attrs={"class": "article_header"}).find('a').get('href')
-            result.update({"href": href})
+            href =element.find('div', attrs={"class": "article_header"}).find('a').get('href')
+
+            result.update({"href": 'https://www.pravda.com.ua'+href})
             result.update({"source": data_source})
             news.append(result)
 

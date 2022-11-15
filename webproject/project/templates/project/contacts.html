@@ -1,37 +1,24 @@
-<link
-        rel="stylesheet"
-        href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css"
-        integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk"
-        crossorigin="anonymous"
-/>
-
 {% extends "./base.html" %}
 
 {% block content %}
-    <div class="container">
-    <form class="form-horizontal">
-        <fieldset>
-
-            <div class="form-group">
-                <label class="col-md-4 control-label" for="selectbasic">Order by</label>
-                <div class="col-md-4">
-                    <select id="selectbasic" name="selectbasic" class="form-control">
-                        <option value="name">Name</option>
-                        <option value="dob">DOB</option>
-                    </select>
-                </div>
-            </div>
-
-        </fieldset>
-    </form>
-
+<div class="container mt-5">
+    <div class="mb-5">
+        <form class="d-flex flex-row align-items-center flex-wrap" action="">
+            <select id="selectbasic" name="selectbasic" class="form-select my-1 me-sm-2 w-auto">
+                <option selected>order by</option>
+                <option value="name">Name</option>
+                <option value="dob">DOB</option>
+            </select>
+            <button class="btn btn-sm btn-outline-secondary w-3" type="submit">Go</button>
+        </form>
+    </div>
 
     <div class="row mb-3">
         <h1>Contacts</h1>
     </div>
-    <div class="alert alert-info"></div>
+
     <div class="row">
-    {% for contact in contacts %}
+        {% for contact in contacts %}
         <div class="col-md-4">
             <div class="accordion" id="accordionExample">
                 <div class="card mb-4 shadow-sm">
@@ -54,17 +41,15 @@
                         <p class="card-text"><strong>Email: </strong>{{ contact.email }}</p>
                         <div class="d-flex justify-content-between align-items-center">
                             <div class="btn-group">
-                                <a class="btn btn-outline-info" href="/contacts/edit/{{ contact.id }}">Edit</a>
+                                <a class="btn btn-outline-info mx-1" href="/contacts/edit/{{ contact.id }}">Edit</a>
                                 <a class="btn btn-outline-danger" href="/contacts/delete/{{ contact.id }}">Delete</a>
-
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-    {% endfor %}
-{% endblock %}
-</div>
-
+        {% endfor %}
+        {% endblock %}
+    </div>
 </div>

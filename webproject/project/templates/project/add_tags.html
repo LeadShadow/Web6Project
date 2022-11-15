@@ -1,33 +1,35 @@
 {% extends "project/base.html" %}
 
-<link
-        rel="stylesheet"
-        href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css"
-        integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk"
-        crossorigin="anonymous"
-/>
-
-
 
 {% block content %}
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        {% if error %}
+        <div>
+            <mark>{{ error }}</mark>
+        </div>
+        {% endif %}
 
-      {% if error %}
-      <div>
-        <mark>{{ error }}</mark>
-      </div>
-      {% endif %}
-      <form method="POST" action="{% url 'usertag' %}">
-        {% csrf_token %}
-        <div style="padding: 10px">
-          <label
-            >Enter the tag name:
-            <input type="text" name="name" required />
-          </label>
+         <div class="row mb-3">
+        <h1>Add tag</h1>
         </div>
-        <div class="grid">
-          <button type="submit">Submit</button>
-          <button type="reset" class="secondary">Reset</button>
-        </div>
-      </form>
+
+        <form class="col-sm-6 rounded shadow-lg py-2" method="POST" action="{% url 'usertag' %}">
+            {% csrf_token %}
+            <div class="form-group mb-3">
+                <div class="input-group">
+                    <span class="input-group-text" id="addon-wrapping">Enter the tag name:</span>
+                    <input class="form-control col-sm-12 type=" text" name="name" required/>
+                </div>
+            </div>
+            <div class="form-group">
+                <button class="btn btn-primary col-sm-12 mb-2" type="submit">Submit</button>
+                <button class="btn btn-outline-danger col-sm-12" type="reset" class="secondary">Reset</button>
+            </div>
+
+
+        </form>
+    </div>
+</div>
 
 {% endblock %}

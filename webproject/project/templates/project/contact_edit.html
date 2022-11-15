@@ -1,10 +1,3 @@
-<link
-        rel="stylesheet"
-        href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css"
-        integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk"
-        crossorigin="anonymous"
-/>
-
 {% extends "./base.html" %}
 
 {% block content %}
@@ -12,32 +5,31 @@
 {% if messages %}
 {% for msg in messages %}
 <div class="alert alert-danger d-flex align-items-center" role="alert">
-  <div>
-    {{ msg }}
-  </div>
+    <div>
+        {{ msg }}
+    </div>
 </div>
 {% endfor %}
 {% endif %}
-<div class="container">
-    <div class="row justify-content-center mb-3">
+<div class="container mt-5">
+    <div class="row justify-content-center mb-5">
         <h1>Edit contact</h1>
     </div>
-    <div class="row justify-content-center mb-3">
-        <img
-                src="{{contact.path}}"
-                width="225"
-                height="225"
-                alt="Avatar photo here"
-                style="object-fit: contain"
-        />
-    </div>
     <div class="row justify-content-center">
-        <form class="col-sm-6" action="" method="POST">
-            <div class="form-group">
-                <div class="input-group flex-nowrap">
-                    <div class="input-group-prepend">
-                        <span class="input-group-text" id="addon-wrapping">Fullname: </span>
-                    </div>
+        <form class="col-sm-6 rounded shadow-lg" action="" method="POST">
+
+            <div class="row justify-content-center mb-2">
+                <img
+                        src="{{contact.path}}"
+                        width="225"
+                        height="225"
+                        alt="Avatar photo here"
+                        style="object-fit: contain"
+                />
+            </div>
+            <div class="form-group mb-2">
+                <div class="input-group">
+                    <span class="input-group-text" id="addon-wrapping">Fullname: </span>
                     <input id="colFormLabelFullname"
                            class="form-control col-sm-12"
                            type="text"
@@ -47,12 +39,9 @@
                     />
                 </div>
             </div>
-
-            <div class="form-group">
-                <div class="input-group flex-nowrap">
-                    <div class="input-group-prepend">
-                        <span class="input-group-text" id="addon-wrapping">DOB: </span>
-                    </div>
+            <div class="form-group mb-2">
+                <div class="input-group ">
+                    <span class="input-group-text" id="addon-wrapping">DOB: </span>
                     <input id="colFormLabelDOB"
                            class="form-control col-sm-12"
                            type="date"
@@ -62,13 +51,9 @@
                     />
                 </div>
             </div>
-
-
-            <div class="form-group">
-                <div class="input-group flex-nowrap">
-                    <div class="input-group-prepend">
-                        <span class="input-group-text" id="addon-wrapping">Address: </span>
-                    </div>
+            <div class="form-group mb-2">
+                <div class="input-group">
+                    <span class="input-group-text" id="addon-wrapping">Address: </span>
                     <input id="colFormLabelAddress"
                            class="form-control col-sm-12"
                            type="text"
@@ -78,12 +63,9 @@
                     />
                 </div>
             </div>
-
-            <div class="form-group">
-                <div class="input-group flex-nowrap">
-                    <div class="input-group-prepend">
-                        <span class="input-group-text" id="addon-wrapping">Phone: </span>
-                    </div>
+            <div class="form-group mb-2">
+                <div class="input-group">
+                    <span class="input-group-text" id="addon-wrapping">Phone: </span>
                     <input id="colFormLabelPhone"
                            class="form-control col-sm-12"
                            type="text"
@@ -93,12 +75,9 @@
                     />
                 </div>
             </div>
-
-            <div class="form-group">
-                <div class="input-group flex-nowrap">
-                    <div class="input-group-prepend">
-                        <span class="input-group-text" id="addon-wrapping">Email: </span>
-                    </div>
+            <div class="form-group mb-2">
+                <div class="input-group ">
+                    <span class="input-group-text" id="addon-wrapping">Email: </span>
                     <input id="colFormLabelEmail"
                            class="form-control col-sm-12"
                            type="text"
@@ -108,9 +87,7 @@
                     />
                 </div>
             </div>
-
-            <div class="form-group">
-
+            <div class="form-group mb-2">
                 <div class="form-group">
                     <button class="btn btn-primary col-sm-12" type="submit">
                         Update
@@ -124,32 +101,30 @@
 {% if messages %}
 {% for msg in messages %}
 <div class="alert alert-danger d-flex align-items-center" role="alert">
-  <div>
-    {{ msg }}
-  </div>
+    <div>
+        {{ msg }}
+    </div>
 </div>
 {% endfor %}
 {% endif %}
-<div class="container">
-    <div class="row justify-content-center mb-3">
+<div class="container mt-5">
+    <div class="row justify-content-center mb-5">
         <h1>Add contact</h1>
     </div>
-    <div class="row justify-content-center mb-3">
-        <img
-                src="{{contact.path}}"
-                width="225"
-                height="225"
-                alt="Avatar photo here"
-                style="object-fit: contain"
-        />
-    </div>
     <div class="row justify-content-center">
-        <form class="col-sm-6" action="" method="POST">
-            <div class="form-group">
-                <div class="input-group flex-nowrap">
-                    <div class="input-group-prepend">
-                        <span class="input-group-text" id="addon-wrapping">Fullname: </span>
-                    </div>
+        <form class="col-sm-6 col-sm-6 rounded shadow-lg" action="" method="POST">
+            <div class="row justify-content-center mb-3 ">
+                <img
+                        src="{{contact.path}}"
+                        width="225"
+                        height="225"
+                        alt="Avatar photo here"
+                        style="object-fit: contain"
+                />
+            </div>
+            <div class="form-group  mb-2">
+                <div class="input-group">
+                    <span class="input-group-text" id="addon-wrapping">Fullname: </span>
                     <input id="colFormLabelFullname"
                            class="form-control col-sm-12"
                            type="text"
@@ -160,11 +135,9 @@
                 </div>
             </div>
 
-            <div class="form-group">
-                <div class="input-group flex-nowrap">
-                    <div class="input-group-prepend">
-                        <span class="input-group-text" id="addon-wrapping">DOB: </span>
-                    </div>
+            <div class="form-group  mb-2">
+                <div class="input-group">
+                    <span class="input-group-text" id="addon-wrapping">DOB: </span>
                     <input id="colFormLabelDOB"
                            class="form-control col-sm-12"
                            type="date"
@@ -176,11 +149,9 @@
             </div>
 
 
-            <div class="form-group">
-                <div class="input-group flex-nowrap">
-                    <div class="input-group-prepend">
-                        <span class="input-group-text" id="addon-wrapping">Address: </span>
-                    </div>
+            <div class="form-group  mb-2">
+                <div class="input-group">
+                    <span class="input-group-text" id="addon-wrapping">Address: </span>
                     <input id="colFormLabelAddress"
                            class="form-control col-sm-12"
                            type="text"
@@ -191,11 +162,9 @@
                 </div>
             </div>
 
-            <div class="form-group">
-                <div class="input-group flex-nowrap">
-                    <div class="input-group-prepend">
-                        <span class="input-group-text" id="addon-wrapping">Phone: </span>
-                    </div>
+            <div class="form-group  mb-2">
+                <div class="input-group">
+                    <span class="input-group-text" id="addon-wrapping">Phone: </span>
                     <input id="colFormLabelPhone"
                            class="form-control col-sm-12"
                            type="text"
@@ -206,11 +175,9 @@
                 </div>
             </div>
 
-            <div class="form-group">
+            <div class="form-group  mb-2">
                 <div class="input-group flex-nowrap">
-                    <div class="input-group-prepend">
-                        <span class="input-group-text" id="addon-wrapping">Email: </span>
-                    </div>
+                    <span class="input-group-text" id="addon-wrapping">Email: </span>
                     <input id="colFormLabelEmail"
                            class="form-control col-sm-12"
                            type="text"
@@ -223,7 +190,7 @@
 
             <div class="form-group">
 
-                <div class="form-group">
+                <div class="form-group  mb-2">
                     <button class="btn btn-primary col-sm-12" type="submit">
                         Submit
                     </button>

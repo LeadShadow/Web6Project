@@ -1,53 +1,45 @@
-{% extends "./base.html" %}
-
+{% extends "project/base.html" %}
 {% block content %}
-<div class="container" xmlns="http://www.w3.org/1999/html">
-    {% if error %}
-    <div>
-        <mark>{{ error }}</mark>
-    </div>
-    {% endif %}
-    <div class="row justify-content-center">
-        <div class="d-flex row justify-content-start">
-            <div class="card w-25 p-3">
-                <div class="=card-header">
-                    <div class="=card-body">
-                        <table class="table table-hover w-25 p-3 table-sm ">
-                            <thead>
-                            <tr>
-                                <td>Currency</td>
-                                <td>Sale</td>
-                                <td>Buy</td>
-                            </tr>
-                            </thead>
-                            <tbody>
-                            {% for line in currency %}
-                            <tr>
-                                <td><strong>{{line.currency_name}}</strong></td>
-                                <td>{{line.buy}}</td>
-                                <td>{{line.sale}}</td>
-                            </tr>
-                            </tbody>
-                            {% endfor %}
-                        </table>
-                    </div>
-                </div>
-            </div>
+<div class="container mt-5">
+    <div class="justify-content-center mb-5">
+        <div class="row mb-3">
+            <h1>Info collector</h1>
         </div>
-        <div class="d-flex row justify-content-start">
-            <table class="table table-hover table-sm">
-                <tbody>
-                {% for line in news %}
+        <div class="border rounded shadow-lg w-25 p-3">
+            <table class="table table-hover">
+                <thead>
                 <tr>
-                    <td><small class="text-muted">{{line.dtime}}</small></td>
-                    <td><a href="{{line.href}}" class="link-secondary text-decoration-none"
-                           target="blank">{{line.title}}<small class="text-muted"> ({{line.source}})</small></a>
-                    </td>
+                    <td>Currency</td>
+                    <td>Sale</td>
+                    <td>Buy</td>
                 </tr>
-                {% endfor %}
+                </thead>
+                <tbody>
+                {% for line in currency %}
+                <tr>
+                    <td><strong>{{line.currency_name}}</strong></td>
+                    <td>{{line.buy}}</td>
+                    <td>{{line.sale}}</td>
+                </tr>
                 </tbody>
+                {% endfor %}
             </table>
+        </div>
+
+        <div class="border rounded mt-5 p-3">
+                <table class="table table-striped">
+                    <tbody>
+                    {% for line in news %}
+                    <tr>
+                        <td>{{line.dtime}}</td>
+                        <td><a href="{{line.href}}" class="link-secondary text-decoration-none"
+                               target="blank">{{line.title}}<small class="text-muted">({{line.source}})</small></a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
         </div>
     </div>
 </div>
-{% endblock %}
+    {% endblock %}

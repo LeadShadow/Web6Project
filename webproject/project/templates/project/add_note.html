@@ -4,8 +4,8 @@
 {% block content %}
 <div class="container mt-5">
     {% if error %}
-    <div>
-        <mark>{{ error }}</mark>
+    <div class="alert alert-danger d-flex align-items-center mt-5" role="alert">
+        <div>{{ error }}</div>
     </div>
     {% endif %}
 
@@ -32,7 +32,7 @@
 
             <div class="form-group mb-3">
                 <div class="input-group flex-nowrap">
-                     <span class="input-group-text">Select tags:</span>
+                    <span class="input-group-text">Select tags:</span>
                     <select class="form-select" name="tags" multiple="multiple" required>
                         {% for tag in tags %}
                         <option value="{{tag.name}}">{{tag.name}}</option>

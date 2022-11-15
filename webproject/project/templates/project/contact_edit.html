@@ -4,7 +4,7 @@
 {% if contact %}
 {% if messages %}
 {% for msg in messages %}
-<div class="alert alert-danger d-flex align-items-center" role="alert">
+<div class="alert alert-danger d-flex align-items-center mt-5" role="alert">
     <div>
         {{ msg }}
     </div>
@@ -18,11 +18,16 @@
     <div class="row justify-content-center">
         <form class="col-sm-6 rounded shadow-lg" action="" method="POST">
 
-            <div class="row justify-content-center mb-2">
+            <div class="row justify-content-center mb-2 pt-3">
                 <img
-                        src="{{contact.path}}"
-                        width="225"
-                        height="225"
+                        {% if pic.path %}
+                        src="{{ pic.path }}"
+                        {% else %}
+                        {% load static %}
+                        src="{% static 'no_avatar.png' %}"
+                        {% endif %}
+                        width="150"
+                        height="150"
                         alt="Avatar photo here"
                         style="object-fit: contain"
                 />
@@ -113,11 +118,16 @@
     </div>
     <div class="row justify-content-center">
         <form class="col-sm-6 col-sm-6 rounded shadow-lg" action="" method="POST">
-            <div class="row justify-content-center mb-3 ">
+            <div class="row justify-content-center mb-3 pt-3">
                 <img
-                        src="{{contact.path}}"
-                        width="225"
-                        height="225"
+                        {% if pic.path %}
+                        src="{{ contact.path }}"
+                        {% else %}
+                        {% load static %}
+                        src="{% static 'no_avatar.png' %}"
+                        {% endif %}
+                        width="150"
+                        height="150"
                         alt="Avatar photo here"
                         style="object-fit: contain"
                 />

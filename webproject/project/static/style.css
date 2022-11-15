@@ -2,11 +2,10 @@ body,
 html {
   font: 16px "Lucida Grande", Helvetica, Arial, sans-serif;
   display: flex;
-  height: 100%;
   flex-direction: column;
   align-items: stretch;
   justify-content: center;
-  align-content: center;
+  align-content: center;*/
 }
 
 a {
@@ -20,7 +19,7 @@ h2 {
 }
 
 .template {
-  /* padding: 3rem 1.5rem; */
+  padding: 3rem 1.5rem;
   text-align: center;
   height: 100%;
   width: 100%;

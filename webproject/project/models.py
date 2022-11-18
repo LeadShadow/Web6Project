@@ -34,7 +34,7 @@ class Note(models.Model):
 class AddressBook(models.Model):
     name = models.CharField(max_length=50, null=False)
     phone = models.CharField(max_length=150, null=False)
-    birthday = models.DateTimeField(max_length=50)
+    birthday = models.DateField(max_length=50)
     email = models.CharField(max_length=50, null=False)
     address = models.CharField(max_length=150, null=False)
     user_id = models.ForeignKey(User, on_delete=models.CASCADE)

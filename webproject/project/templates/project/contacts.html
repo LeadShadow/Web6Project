@@ -16,13 +16,20 @@
         </form>
     </div>
     <div class="mb-5">
-        <form class="d-flex flex-row align-items-center flex-wrap" action="">
-            <select id="selectbasic" name="selectbasic" class="form-select my-1 me-sm-2 w-auto">
-                <option selected>order by</option>
-                <option value="name">Name</option>
-                <option value="dob">DOB</option>
-            </select>
-            <button class="btn btn-sm btn-outline-secondary w-3" type="submit">Go</button>
+        <form class="d-flex flex-row align-items-center flex-wrap" action="/show_addressbook">
+            <div class="dropdown col-md-4">
+                    <button class="btn btn-info dropdown-toggle" type="button" id="dropdownMenuButton1"
+                            data-bs-toggle="dropdown" aria-expanded="false" style="margin-right: 340px">
+                        Filter: {% if filt %}{{ filt }}{% else %}No{% endif %}
+                    </button>
+                    <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+                        {% for item in items %}
+                        <li>
+                            <a class="dropdown-item" href="{{ item }}" title="{{ item }}">{{ item }}</a>
+                        </li>
+                        {% endfor %}
+                    </ul>
+                </div>
         </form>
     </div>
     <div class="row mb-3">
@@ -56,7 +63,7 @@
                         <p class="card-text"><strong>Phone: </strong>{{ contact.phone }}</p>
                         <p class="card-text"><strong>Email: </strong>{{ contact.email }}</p>
                         <div class="d-flex justify-content-between align-items-center">
-                            <div class="btn-group">
+                            <div class="btn-group" style="padding-left: 125px">
                                 <a class="btn btn-outline-info mx-1" href="/contacts/edit/{{ contact.id }}">Edit</a>
                                 <a class="btn btn-outline-danger" href="/contacts/delete/{{ contact.id }}">Delete</a>
                             </div>

@@ -15,7 +15,7 @@ from .models import Tag, Note, User, Files, AddressBook
 from .forms import TagForm, NoteForm, ABForm
 
 # Create your views here.
-from .validation_ab import Phone, Birthday, Email, DateIsNotValid, DateVeryBig
+from .validation_ab import Phone, Birthday, Email, DateIsNotValid, DateVeryBig, items
 from .files_libs import *
 import requests
 from bs4 import BeautifulSoup
@@ -231,10 +231,26 @@ def delete_ab(request, ab_id):
 
 @login_required
 def show_addressbook(request):
+    global items
     contacts = AddressBook.objects.filter(user_id=request.user).all()
     if request.method == 'GET':
-        return render(request, 'project/contacts.html', {'contacts': contacts})
+        return render(request, 'project/contacts.html', {'contacts': contacts, 'items': items})
     return render(request, 'project/contacts.html')
+
+
+@login_required
+def filter_addressbook(request, filter):
+    global items
+    contacts = []
+    filt = filter
+    if request.method == 'GET':
+        if filter == 'Sort alphabetically':
+            contacts = AddressBook.objects.filter(user_id=request.user).all().order_by('name').values()
+        elif filter == 'Sort by ascending date':
+            contacts = AddressBook.objects.filter(user_id=request.user).all().order_by('-birthday').values()
+        elif filter == 'Sort by descending date':
+            contacts = AddressBook.objects.filter(user_id=request.user).all().order_by('birthday').values()
+        return render(request, 'project/contacts.html', {'contacts': contacts, 'items': items, 'filt': filt})
 
 
 @login_required
@@ -376,6 +392,63 @@ def parser(request):
                     print(k, v)
 
     return render(request, 'project/info.html', {"news": sorted_news, 'currency': currency})
+
+
+@login_required
+def view_files(request):
+    all_files = Files.objects.filter(user_id=request.user).all()
+    return render(request, 'project/files.html', {'gfiles': all_files, 'filt': ''})
+
+
+@login_required
+def filter_files(request, filt):
+    all_files = Files.objects.filter(user_id=request.user, type=filt).all()
+    return render(request, 'project/files.html', {'gfiles': all_files, 'filt': filt})
+
+
+@login_required
+def file_download(request, file_id):
+    down_file = Files.objects.filter(user_id=request.user, id=file_id).first()
+    fileid = down_file.up_id
+    grequest = service.files().get_media(fileId=fileid)
+    down_dir = DOWNLOAD_DIR / str(request.user)
+    down_dir.mkdir(exist_ok=True, parents=True)
+    filename = DOWNLOAD_DIR / str(request.user) / down_file.name
+    fh = io.FileIO(filename, 'wb')
+    downloader = MediaIoBaseDownload(fh, grequest)
+    done = False
+    while done is False:
+        status, done = downloader.next_chunk()
+        print("Download %d%%." % int(status.progress() * 100))
+    return redirect('view_files')
+
+
+@login_required
+def file_upload(request):
+    if request.method == 'POST' and request.FILES['myfile']:
+        file = request.FILES['myfile']
+        if os.path.exists(UPLOAD_DIR / file.name):
+            os.remove(UPLOAD_DIR / file.name)
+        fs = FileSystemStorage(UPLOAD_DIR)
+        filename = fs.save(file.name, file)
+        ext = get_extension(filename)
+        filetype = file_type(ext)
+        file_path = UPLOAD_DIR / filename
+        file_metadata = {
+            'name': filename,
+            'parents': [GDRIVE_FOLDER_ID]
+        }
+        media = MediaFileUpload(file_path, resumable=True)
+        r = service.files().create(body=file_metadata, media_body=media, fields='id, size, createdTime').execute()
+        print(r)
+        new_file = Files(user_id=request.user, name=filename)
+        new_file.size = int(r['size'])
+        new_file.type = filetype
+        new_file.up_id = r['id']
+        new_file.up_time = r['createdTime']
+        new_file.save()
+        return redirect('view_files')
+    return render(request, 'project/file_upload.html')
 
 
 @login_required

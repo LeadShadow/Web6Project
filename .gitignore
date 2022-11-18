@@ -133,3 +133,4 @@ dmypy.json
 # DS_STore
 .DS_STORE
 /webproject/web6project.json
+/webproject/project/download

@@ -94,7 +94,9 @@ def note(request):
     if request.method == 'POST':
         try:
             list_tags = request.POST.getlist('tags')
+            print('1')
             form = NoteForm(request.POST)
+            print('1')
             new_note = form.save(commit=False)
             new_note.user_id = request.user
             new_note.save()

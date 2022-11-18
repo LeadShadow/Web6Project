@@ -4,7 +4,7 @@ from . import views
 urlpatterns = [
     path('', views.main, name='main'),
     path('add_tags/', views.tag, name='usertag'),
-    path('notes/', views.note, name='notes'),
+    path('add_note/', views.note, name='add_note'),
     path('show_note/', views.show_notes, name='show_note'),
     path('done_note/<int:note_id>', views.set_done_note, name='set_done_note'),
     path('delete/<int:note_id>', views.delete_note, name='delete_note'),

@@ -19,4 +19,9 @@ urlpatterns = [
     path('note_edit/<int:note_id>', views.edit_note, name='note_edit'),
     path('info_collector/', views.parser, name='parser'),
     path('detail_note/<int:note_id>', views.detail_note, name='detail_note'),
+    path('files/', views.view_files, name='view_files'),
+    path('files/filter/<str:filt>', views.filter_files, name='filter_files'),
+    path('files/add/', views.file_upload, name='file_upload'),
+    path('files/down/<int:file_id>', views.file_download, name='file_download'),
+
 ]

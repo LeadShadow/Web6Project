@@ -1,0 +1,49 @@
+<link
+        rel="stylesheet"
+        href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css"
+        integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk"
+        crossorigin="anonymous"
+/>
+{% extends "project/base.html" %}
+
+{% block content %}
+    <div class="container">
+        <div class="row justify-content-center mb-3">
+            <h1>Files on the server</h1>
+        </div>
+        {#        {% with messages = get_flashed_messages() %}#}
+        {#          {% if messages %}#}
+        {#            {% for message in messages %}#}
+        {#              <div class="alert alert-warning">{{message}}</div>#}
+        {#            {% endfor %}#}
+        {#          {% endif %}#}
+        {#        {% endwith %}#}
+        <div class="row justify-content-center">
+            <form
+                    class="col-sm-6"
+                    method="post"
+                    enctype="multipart/form-data"
+            >
+                {% csrf_token %}
+                <div class="form-group">
+                    <div class="custom-file">
+                        <input
+                                class="custom-file-input"
+                                type="file"
+                                name="myfile"
+                                id="customFile"
+                        />
+                        <label class="custom-file-label" for="customFile"
+                        >Choose file</label
+                        >
+                    </div>
+                </div>
+                <div class="form-group">
+                    <button class="btn btn-primary col-sm-12" type="submit">
+                        Upload
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+{% endblock %}

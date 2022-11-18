@@ -1,0 +1,57 @@
+{% extends "project/base.html" %}
+{% block content %}
+    <div class="container mt-5">
+        <div class="justify-content-center mb-5">
+            <div class="row">
+                <div class="col-md-6">
+                    <h2>All Files</h2>
+                </div>
+
+                <div class="dropdown col-md-4">
+                    <button class="btn btn-info dropdown-toggle" type="button" id="dropdownMenuButton1"
+                            data-bs-toggle="dropdown" aria-expanded="false">
+                        Filter: {% if filt %}{{ filt }}{% else %}No{% endif %}
+                    </button>
+                    <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+                        <li><a class="dropdown-item" href="{% url 'filter_files' 'Images' %}">Images</a></li>
+                        <li><a class="dropdown-item" href="{% url 'filter_files' 'Audio' %}">Audio</a></li>
+                        <li><a class="dropdown-item" href="{% url 'filter_files' 'Video' %}">Video</a></li>
+                        <li><a class="dropdown-item" href="{% url 'filter_files' 'Documents' %}">Documents</a></li>
+                        <li><a class="dropdown-item" href="{% url 'filter_files' 'Programs' %}">Programs</a></li>
+                        <li><a class="dropdown-item" href="{% url 'filter_files' 'Archives' %}">Archives</a></li>
+                        <li><a class="dropdown-item" href="{% url 'filter_files' 'Others' %}">Others</a></li>
+                        <li><a class="dropdown-item" href="{% url 'view_files' %}">No Filters</a></li>
+                    </ul>
+                </div>
+
+            </div>
+
+            <div class="border rounded mt-5 p-3">
+                <table class="table table-striped">
+                    <thead>
+                    <tr>
+                        <td>Name</td>
+                        <td>Type</td>
+                        <td>Size, b</td>
+                        <td>Date</td>
+                        <td>Actions</td>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for gf in gfiles %}
+                        <tr>
+                            <td>{{ gf.name }}</td>
+                            <td>{{ gf.type }}</td>
+                            <td>{{ gf.size }}</td>
+                            <td>{{ gf.up_time|date:'d M y  H:m' }}</td>
+                            <td>
+                                <a href="{% url 'file_download' gf.id %}" role="button" class="contrast outline">Download</a>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+{% endblock %}

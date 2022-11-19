@@ -38,7 +38,7 @@
                     <div class="input-group flex-nowrap">
                         <span class="input-group-text">Select tags:</span>
                         <label>
-                            <select class="form-select"  name="tags" multiple="multiple" required>
+                            <select class="form-select" name="tags" multiple="multiple" required>
                                 {% for tag in tags %}
                                     <option value="{{ tag.name }}">{{ tag.name }}</option>
                                 {% endfor %}

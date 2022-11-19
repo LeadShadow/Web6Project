@@ -14,7 +14,7 @@
             <h2>Add note</h2>
         </div>
 
-            <form class="col-sm-6 shadow-lg py-2 rounded" method="POST" action="{% url 'notes' %}">
+            <form class="col-sm-6 shadow-lg py-2 rounded" method="POST" action="{% url 'add_note' %}">
                 {% csrf_token %}
                 <div class="form-group mb-3">
                     <div class="input-group">

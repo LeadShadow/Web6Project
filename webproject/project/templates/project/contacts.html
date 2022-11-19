@@ -3,7 +3,7 @@
 {% block content %}
 <div class="container mt-5">
     <div class="mb-1">
-        <form class="d-flex flex-row align-items-center flex-wrap" action="">
+        <form class="d-flex flex-row align-items-center flex-wrap" action="search" method="post">
             <div class="input-group w-25">
                 <input id="colFormLabelEmail"
                        class="form-control col-12 my-1 me-sm-2 w-auto"
@@ -16,7 +16,7 @@
         </form>
     </div>
     <div class="mb-5">
-        <form class="d-flex flex-row align-items-center flex-wrap" action="/show_addressbook">
+        <form class="d-flex flex-row align-items-center flex-wrap" action="/show_contacts">
             <div class="dropdown col-md-4">
                     <button class="btn btn-info dropdown-toggle" type="button" id="dropdownMenuButton1"
                             data-bs-toggle="dropdown" aria-expanded="false" style="margin-right: 340px">
@@ -73,6 +73,45 @@
             </div>
         </div>
         {% endfor %}
-        {% endblock %}
     </div>
+    {% if contact %}
+    <div class="row">
+        <div class="col-md-4">
+            <div class="accordion" id="accordionExample">
+                <div class="card mb-4 shadow-sm">
+                    <div class="card-body">
+                        <img
+                                class="bd-placeholder-img card-img-top"
+                                {% if pic.path %}
+                                src="{{ pic.path }}"
+                                {% else %}
+                                {% load static %}
+                                src="{% static 'no_avatar.png' %}"
+                                {% endif %}
+                                width="150"
+                                height="150"
+                                alt="avatar photo here"
+                                srcset=""
+                                style="object-fit: contain"/>
+                        </br>
+                        </br>
+                        <p class="card-title"><strong>Fullname: </strong> {{ contact.name }}</p>
+                        </p>
+                        <p class="card-text"><strong>Birthday: </strong>{{ contact.birthday }}</p>
+                        <p class="card-text"><strong>Address: </strong>{{ contact.address }}</p>
+                        <p class="card-text"><strong>Phone: </strong>{{ contact.phone }}</p>
+                        <p class="card-text"><strong>Email: </strong>{{ contact.email }}</p>
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div class="btn-group" style="padding-left: 125px">
+                                <a class="btn btn-outline-info mx-1" href="/contacts/edit/{{ contact.id }}">Edit</a>
+                                <a class="btn btn-outline-danger" href="/contacts/delete/{{ contact.id }}">Delete</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+    {% endblock %}
 </div>

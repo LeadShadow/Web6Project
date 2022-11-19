@@ -3,6 +3,7 @@ import os
 
 from django.contrib import messages
 from django.core.files.storage import FileSystemStorage
+from django.db.models import Q
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.forms import AuthenticationForm, UserCreationForm
 from django.contrib.auth import login, authenticate, logout
@@ -253,6 +254,15 @@ def filter_addressbook(request, filter):
         elif filter == 'Sort by descending date':
             contacts = AddressBook.objects.filter(user_id=request.user).all().order_by('birthday').values()
         return render(request, 'project/contacts.html', {'contacts': contacts, 'items': items, 'filt': filt})
+
+
+@csrf_exempt
+@login_required
+def search(request):
+    global items
+    search_value = request.POST.get('search_key')
+    contact = AddressBook.objects.filter(Q(user_id=request.user, phone=search_value) | Q(user_id=request.user, name=search_value))
+    return render(request, 'project/contacts.html', {'contacts': contact, 'items': items})
 
 
 @login_required

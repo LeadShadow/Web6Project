@@ -80,7 +80,7 @@ def tag(request):
             tag = form.save(commit=False)
             tag.user_id = request.user
             tag.save()
-            return redirect(to='main')
+            return redirect(to='add_note')
         except ValueError as err:
             return render(request, 'project/add_tags.html', {'form': TagForm(), 'error': err})
         except IntegrityError as err:
@@ -104,7 +104,7 @@ def note(request):
             choice_tags = Tag.objects.filter(name__in=list_tags, user_id=request.user)  # WHERE name in []
             for tag in choice_tags.iterator():
                 new_note.tags.add(tag)
-            return redirect(to='main')
+            return redirect(to='show_note')
         except ValueError as err:
             return render(request, 'project/add_note.html', {"tags": tags, 'form': NoteForm(), 'error': err})
 

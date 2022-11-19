@@ -1,5 +1,6 @@
 import re
 from datetime import datetime
+items = ['Sort by ascending date', 'Sort by descending date', 'Sort alphabetically']
 
 
 class DateIsNotValid(Exception):

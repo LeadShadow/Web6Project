@@ -9,7 +9,7 @@ from django.contrib.auth.forms import AuthenticationForm, UserCreationForm
 from django.contrib.auth import login, authenticate, logout
 from django.contrib.auth.decorators import login_required
 from django.db import IntegrityError
-from django.views.decorators.csrf import csrf_exempt
+from django.views.decorators.csrf import csrf_exempt, csrf_protect
 from googleapiclient.http import MediaFileUpload, MediaIoBaseDownload
 
 from .models import Tag, Note, User, Files, AddressBook
@@ -242,6 +242,7 @@ def show_addressbook(request):
 
 
 @login_required
+@csrf_protect
 def filter_addressbook(request, filter):
     global items
     contacts = []
@@ -253,16 +254,26 @@ def filter_addressbook(request, filter):
             contacts = AddressBook.objects.filter(user_id=request.user).all().order_by('-birthday').values()
         elif filter == 'Sort by descending date':
             contacts = AddressBook.objects.filter(user_id=request.user).all().order_by('birthday').values()
+        else:
+            search_value = request.GET.get('search_key')
+            contact = AddressBook.objects.filter(
+                Q(user_id=request.user, phone=search_value) | Q(user_id=request.user, name=search_value))
+            contacts = list(contact)
         return render(request, 'project/contacts.html', {'contacts': contacts, 'items': items, 'filt': filt})
 
 
-@csrf_exempt
+@csrf_protect
 @login_required
 def search(request):
     global items
-    search_value = request.POST.get('search_key')
-    contact = AddressBook.objects.filter(Q(user_id=request.user, phone=search_value) | Q(user_id=request.user, name=search_value))
-    return render(request, 'project/contacts.html', {'contacts': contact, 'items': items})
+    if request.method == 'POST':
+        search_value = request.POST.get('search_key')
+        contact = AddressBook.objects.filter(
+            Q(user_id=request.user, phone=search_value) | Q(user_id=request.user, name=search_value))
+        contacts = list(contact)
+        return render(request, 'project/contacts.html', {'contacts': contacts, 'items': items})
+    else:
+        return redirect(to='filter_addressbook')
 
 
 @login_required
@@ -386,9 +397,9 @@ def parser(request):
             result.update({"dtime": date_time})
             title = element.find('div', attrs={"class": "article_header"}).text
             result.update({"title": title})
-            href =element.find('div', attrs={"class": "article_header"}).find('a').get('href')
+            href = element.find('div', attrs={"class": "article_header"}).find('a').get('href')
 
-            result.update({"href": 'https://www.pravda.com.ua'+href})
+            result.update({"href": 'https://www.pravda.com.ua' + href})
             result.update({"source": data_source})
             news.append(result)
 

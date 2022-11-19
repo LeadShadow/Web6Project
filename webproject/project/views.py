@@ -257,6 +257,7 @@ def filter_addressbook(request, filter):
 
 @login_required
 def parser(request):
+
     # CURRENCY
     # https://https://finance.i.ua/
     currency = []
@@ -386,7 +387,9 @@ def parser(request):
     sorted_news.reverse()
 
     for el in sorted_news:
+
         for k, v in el.items():
+
             if k == 'dtime':
                 try:
                     el.update({"dtime": v.strftime("%H:%M")})

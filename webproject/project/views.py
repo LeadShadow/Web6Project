@@ -153,6 +153,45 @@ def edit_note(request, note_id):
     return render(request, 'project/add_note.html', {"tags": tags, 'form': NoteForm(instance=note)})
 
 
+@login_required
+@csrf_protect
+def filter_notes(request, filter):
+    global items
+    notes = []
+    tags = []
+    srch = filter
+    if request.method == 'GET':
+        if filter == 'Sort alphabetically':
+            notes = Note.objects.filter(user_id=request.user).all().order_by('name').values()
+        elif filter == 'Sort by ascending date':
+            notes = Note.objects.filter(user_id=request.user).all().order_by('-created').values()
+        elif filter == 'Sort by descending date':
+            notes = Note.objects.filter(user_id=request.user).all().order_by('created').values()
+        else:
+            search_value = request.GET.get('search_key')
+            notes = Note.objects.filter(
+                Q(user_id=request.user, name=search_value) | Q(user_id=request.user, description=search_value))
+            notes = list(notes)
+            tags = Tag.objects.filter(
+                Q(user_id=request.user, name=search_value))
+            tags = list(tags)
+        return render(request, 'project/show_note.html', {'notes': notes, 'items': items, 'srch': srch})
+
+
+@csrf_protect
+@login_required
+def search_note(request):
+    global items
+    if request.method == 'POST':
+        search_value = request.POST.get('search_key')
+        notes = Note.objects.filter(
+            Q(user_id=request.user, name=search_value) | Q(user_id=request.user, description=search_value))
+        notes = list(notes)
+        return render(request, 'project/show_note.html', {'notes': notes, 'items': items})
+    else:
+        return redirect(to='filter_notes')
+
+
 @csrf_exempt
 @login_required
 def addressbook(request):

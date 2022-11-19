@@ -122,14 +122,14 @@ def show_notes(request):
 @login_required
 def set_done_note(request, note_id):
     Note.objects.filter(pk=note_id, user_id=request.user).update(done=True)
-    return redirect('main')
+    return redirect('show_notes')
 
 
 @login_required
 def delete_note(request, note_id):
     note = Note.objects.get(pk=note_id, user_id=request.user)
     note.delete()
-    return redirect('main')
+    return redirect('show_notes')
 
 
 @login_required
@@ -278,6 +278,7 @@ def search(request):
 
 @login_required
 def parser(request):
+
     # CURRENCY
     # https://https://finance.i.ua/
     currency = []
@@ -407,7 +408,9 @@ def parser(request):
     sorted_news.reverse()
 
     for el in sorted_news:
+
         for k, v in el.items():
+
             if k == 'dtime':
                 try:
                     el.update({"dtime": v.strftime("%H:%M")})

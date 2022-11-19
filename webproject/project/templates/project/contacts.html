@@ -18,7 +18,7 @@
     <div class="mb-5">
         <form class="d-flex flex-row align-items-center flex-wrap" action="/show_contacts">
             <div class="dropdown col-md-4">
-                    <button class="btn btn-info dropdown-toggle" type="button" id="dropdownMenuButton1"
+                    <button class="btn btn-outline-secondary dropdown-toggle" type="button" id="dropdownMenuButton1"
                             data-bs-toggle="dropdown" aria-expanded="false" style="margin-right: 340px">
                         Filter: {% if filt %}{{ filt }}{% else %}No{% endif %}
                     </button>
@@ -29,7 +29,7 @@
                         </li>
                         {% endfor %}
                     </ul>
-                </div>
+            </div>
         </form>
     </div>
     <div class="row mb-3">

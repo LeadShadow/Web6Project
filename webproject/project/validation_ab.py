@@ -28,7 +28,7 @@ class Phone(Field):
     @value.setter
     def value(self, value: str):
         def is_code_valid(phone_code: str) -> bool:
-            if phone_code[:2] in ('03', '04', '05', '06', '09') and phone_code[2] != '0' and phone_code != '039':
+            if phone_code[:2] in ('03', '04', '05', '06', '09') and phone_code != '039':
                 return True
             return False
 

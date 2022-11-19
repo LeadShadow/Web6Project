@@ -121,14 +121,14 @@ def show_notes(request):
 @login_required
 def set_done_note(request, note_id):
     Note.objects.filter(pk=note_id, user_id=request.user).update(done=True)
-    return redirect('main')
+    return redirect('show_notes')
 
 
 @login_required
 def delete_note(request, note_id):
     note = Note.objects.get(pk=note_id, user_id=request.user)
     note.delete()
-    return redirect('main')
+    return redirect('show_notes')
 
 
 @login_required

@@ -28,17 +28,18 @@
                                     {{ note.tags.all|join:", " }}
                                 </small></p>
                                 {%if not note.done%}
-                                <a href="{% url 'detail_note' note.id %}" role="button" class="outline"
-                                ><p>{{ note.created }}: </p>
-                                    <p>{{note.name}} </p>
-                                    <p>{{note.description}} </p>
+                                <a href="{% url 'detail_note' note.id %}" role="button" class="text-decoration-none"
+                                ><p class="text-secondary">{{ note.created }}: </p>
+                                    <p><strong>{{note.name}}</strong></p>
+                                    <p class="text-dark">{{note.description}} </p>
                                     <p>{{ note.status }} </p>
                                 </a
                                 >
-                                <a href="{% url 'set_done_note' note.id %}" role="button"> Mark Done</a>
-                                <a href="{% url 'delete_note' note.id %}" role="button" class="contrast"
-                                >Delete note</a
-                                >
+                                <div class="btn-group">
+                                    <a class="btn btn-outline-info mx-1" href="{% url 'set_done_note' note.id %}">Mark Done</a>
+                                    <a class="btn btn-outline-danger"
+                                       href="{% url 'delete_note' note.id %}">Delete note</a>
+                                </div>
                                 {% else %}
 
                                 <a href="{% url 'detail_note' note.id %}" role="button" class="secondary"

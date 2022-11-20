@@ -27,46 +27,82 @@
     </div>
     <div class="collapse navbar-collapse flex-grow-1 text-right" id="myNavbar">
         <ul class="navbar-nav ms-auto flex-nowrap px-3">
-            <li class="nav-item"><a class="nav-link" href="/">Home</a></li>
             {% if user.is_authenticated %}
-            <li class="nav-item">
-                <a class="nav-link" href="/show_contacts">Contacts</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="/contact">Add contact</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="/show_note">Notes</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="/add_note">Add note</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="/add_tags">Add tag</a>
+
+            <li class="nav-item"><a class="nav-link" href="/">Home</a></li>
+
+            <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown"
+                   aria-expanded="false">
+                    Contacts
+                </a>
+                <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                    <li class="nav-item">
+                        <a class="dropdown-item" href="/show_contacts">Contacts</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="dropdown-item" href="/contact">Add contact</a>
+                    </li>
+                </ul>
             </li>
 
-                <li class="nav-item">
-                    <a class="nav-link" href="/files">Files</a>
-                </li>
+            <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown"
+                   aria-expanded="false">
+                    Notes
+                </a>
+                <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                    <li class="nav-item">
+                        <a class="dropdown-item" href="/show_note">Notes</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="dropdown-item" href="/add_note">Add note</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="dropdown-item" href="/add_tags">Add tag</a>
+                    </li>
+                </ul>
+            </li>
 
-                <li class="nav-item">
-                    <a class="nav-link" href="/files/add">Add file</a>
-                </li>
+            <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown"
+                   aria-expanded="false">
+                    Files
+                </a>
+                <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                    <li class="nav-item">
+                        <a class="dropdown-item" href="/files">Files</a>
+                    </li>
 
-                <li class="nav-item">
-                    <a class="nav-link" href="/info_collector">Info collector</a>
-                </li>
+                    <li class="nav-item">
+                        <a class="dropdown-item" href="/files/add">Add file</a>
+                    </li>
+                </ul>
+            </li>
 
-                <li class="nav-item">
-                    <a class="nav-link" href="/logout">Log out</a>
-                </li>
+            <li class="nav-item">
+                <a class="nav-link" href="/info_collector">Info collector</a>
+            </li>
+
+            <li class="nav-item">
+                <a class="nav-link" href="/about_us">About us</a>
+            </li>
+
+            <li class="nav-item">
+                <a class="nav-link" href="/logout">Log out</a>
+            </li>
             {% else %}
-                <li class="nav-item">
-                    <a class="nav-link" href="/signup">Registration</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="/login">Log in</a>
-                </li>
+
+            <li class="nav-item">
+                <a class="nav-link" href="/about_us">About us</a>
+            </li>
+
+            <li class="nav-item">
+                <a class="nav-link" href="/signup">Registration</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="/login">Log in</a>
+            </li>
             {% endif %}
         </ul>
     </div>

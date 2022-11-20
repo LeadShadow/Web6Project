@@ -18,17 +18,17 @@
     <div class="mb-5">
         <form class="d-flex flex-row align-items-center flex-wrap" action="/show_contacts">
             <div class="dropdown col-md-4">
-                    <button class="btn btn-outline-secondary dropdown-toggle" type="button" id="dropdownMenuButton1"
-                            data-bs-toggle="dropdown" aria-expanded="false" style="margin-right: 340px">
-                        Filter: {% if filt %}{{ filt }}{% else %}No{% endif %}
-                    </button>
-                    <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
-                        {% for item in items %}
-                        <li>
-                            <a class="dropdown-item" href="{{ item }}" title="{{ item }}">{{ item }}</a>
-                        </li>
-                        {% endfor %}
-                    </ul>
+                <button class="btn btn-outline-secondary dropdown-toggle" type="button" id="dropdownMenuButton1"
+                        data-bs-toggle="dropdown" aria-expanded="false" style="margin-right: 340px">
+                    Filter: {% if filt %}{{ filt }}{% else %}No{% endif %}
+                </button>
+                <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+                    {% for item in items %}
+                    <li>
+                        <a class="dropdown-item" href="{{ item }}" title="{{ item }}">{{ item }}</a>
+                    </li>
+                    {% endfor %}
+                </ul>
             </div>
         </form>
     </div>

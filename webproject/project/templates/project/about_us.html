@@ -1,0 +1,98 @@
+{% extends "./base.html" %}
+{% block content %}
+<div class="container mt-5">
+    <div class="row mb-5">
+        <h2>Our Team</h2>
+    </div>
+    <div class="row mt-3">
+        <div class="col-md-4 w-25">
+            <div class="card mb-4 shadow">
+                <div class="card-body">
+                    <a target="blank" href="https://github.com/LeadShadow">
+                        <img
+                                class="bd-placeholder-img card-img-top"
+                                {% load static %}
+                                src="{% static 'Oleksandr Samus.jpg' %}"
+                                width="250"
+                                height="250"
+                                alt="our team photo here"
+                                style="object-fit: contain"
+                        />
+                    </a>
+                    <p class="card-title mt-3"><strong>Oleksandr Samus</strong></p>
+                    <div class="btn-group" style="padding-left: 125px"><a target="blank"
+                                                                          href="https://github.com/LeadShadow">
+                        <img src="{% static 'gitlogo.png' %}"></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4 w-25">
+            <div class="card mb-4 shadow">
+                <div class="card-body">
+                    <a target="blank" href="https://github.com/VitaliyLobko">
+                        <img
+                                class="bd-placeholder-img card-img-top"
+                                {% load static %}
+                                src="{% static 'Vitaliy Lobko.jpg' %}"
+                                width="250"
+                                height="250"
+                                alt="our team photo here"
+                                style="object-fit: contain"
+                        />
+                    </a>
+                    <p class="card-title mt-3"><strong>Vitaliy Lobko</strong></p>
+                    <div class="btn-group" style="padding-left: 125px"><a target="blank"
+                                                                          href="https://github.com/VitaliyLobko">
+                        <img src="{% static 'gitlogo.png' %}"></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4 w-25">
+            <div class="card mb-4 shadow">
+                <div class="card-body">
+                    <a target="blank" href="https://github.com/VlodyaKr">
+                        <img
+                                class="bd-placeholder-img card-img-top"
+                                {% load static %}
+                                src="{% static 'Volodymyr Kravchenko.jpg' %}"
+                                width="250"
+                                height="250"
+                                alt="our team photo here"
+                                style="object-fit: contain"
+                        />
+                    </a>
+                    <p class="card-title mt-3"><strong>Volodymyr Kravchenko</strong></p>
+                    <div class="btn-group" style="padding-left: 125px"><a target="blank"
+                                                                          href="https://github.com/VlodyaKr">
+                        <img src="{% static 'gitlogo.png' %}"></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4 w-25">
+            <div class="card mb-4 shadow">
+                <div class="card-body">
+                    <a target="blank" href="https://github.com/shuaaam">
+                        <img
+                                class="bd-placeholder-img card-img-top"
+                                {% load static %}
+                                src="{% static 'Oleksandra Melnyk.jpg' %}"
+                                width="250"
+                                height="250"
+                                alt="our team photo here"
+                                style="object-fit: contain"
+                        />
+                    </a>
+                    <p class="card-title mt-3"><strong>Oleksandra Melnyk</strong></p>
+                    <div class="btn-group" style="padding-left: 125px"><a target="blank"
+                                                                          href="https://github.com/shuaaam">
+                        <img src="{% static 'gitlogo.png' %}"></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

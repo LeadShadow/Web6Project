@@ -27,5 +27,6 @@ urlpatterns = [
     path('files/filter/<str:filt>', views.filter_files, name='filter_files'),
     path('files/add/', views.file_upload, name='file_upload'),
     path('files/down/<int:file_id>', views.file_download, name='file_download'),
+    path('about_us', views.about_us, name='about_us'),
 
 ]

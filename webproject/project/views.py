@@ -62,7 +62,7 @@ def main(request):
     notes = []
     if request.user.is_authenticated:
         notes = Note.objects.filter(user_id=request.user).all()
-    return render(request, 'project/base.html', {"notes": notes})
+    return render(request, 'project/index.html', {"notes": notes})
 
 
 @login_required
@@ -571,3 +571,8 @@ def file_upload(request):
         new_file.save()
         return redirect('view_files')
     return render(request, 'project/file_upload.html')
+
+
+
+def about_us(request):
+    return render(request, 'project/about_us.html')

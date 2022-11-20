@@ -161,6 +161,7 @@ def filter_note(request, filter):
     global items_note
     print('1')
     notes = []
+    tags = Tag.objects.filter(user_id=request.user).all()
     filt = filter
     if request.method == 'GET':
         if filter == 'Sort tags':
@@ -171,10 +172,24 @@ def filter_note(request, filter):
             notes = Note.objects.filter(user_id=request.user).all().order_by('created').values()
         else:
             search_value = request.GET.get('search_key')
-            note = Note.objects.filter(
+            notes = Note.objects.filter(
                 Q(user_id=request.user, tags=search_value) | Q(user_id=request.user, name=search_value))
-            notes = list(note)
-        return render(request, 'project/show_note.html', {'notes': notes, 'items': items_note, 'filt': filt})
+            notes = list(notes)
+        return render(request, 'project/show_note.html', {'notes': notes, 'items': items_note, 'tags': tags, 'filt': filt})
+
+
+@csrf_protect
+@login_required
+def search_note(request):
+    global items_note
+    if request.method == 'POST':
+        search_value = request.POST.get('search_key')
+        notes = Note.objects.filter(
+            Q(user_id=request.user, tags=search_value) | Q(user_id=request.user, name=search_value))
+        notes = list(notes)
+        return render(request, 'project/show_note.html', {'notes': notes, 'items': items_note})
+    else:
+        return redirect(to='filter_note')
 
 
 @csrf_exempt

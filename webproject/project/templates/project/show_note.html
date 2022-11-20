@@ -1,13 +1,13 @@
 {% extends "project/base.html" %}
 {% block content %}
-<div class="container mt-5">
-    <div class="mb-1">
-        <form class="d-flex flex-row align-items-center flex-wrap" action="">
+    <div class="container mt-5">
+        <div class="mb-1">
+            <form class="d-flex flex-row align-items-center flex-wrap" action="search">
             <div class="input-group w-25">
                 <input id="colFormLabelEmail"
                        class="form-control col-12 my-1 me-sm-2 w-auto"
                        type="text"
-                       placeholder="Tag or name"
+                       placeholder="name or phone number"
                        name="search_key"
                 />
             </div>
@@ -15,53 +15,62 @@
         </form>
     </div>
     <div class="mb-5">
-        <form class="d-flex flex-row align-items-center flex-wrap" action="">
-            <select id="selectbasic" name="selectbasic" class="form-select my-1 me-sm-2 w-auto">
-                <option selected>order by</option>
-                <option value="name">Date</option>
-                <option value="dob">Tag</option>
-            </select>
-            <button class="btn btn-sm btn-outline-secondary w-3" type="submit">Go</button>
+        <form class="d-flex flex-row align-items-center flex-wrap" action="/show_notes">
+            <div class="dropdown col-md-4">
+                <button class="btn btn-outline-secondary dropdown-toggle" type="button" id="dropdownMenuButton1"
+                        data-bs-toggle="dropdown" aria-expanded="false" style="margin-right: 340px">
+                    Filter: {% if filt %}{{ filt }}{% else %}No{% endif %}
+                </button>
+                <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+                    {% for item in items %}
+                    <li>
+                        <a class="dropdown-item" href="{{ item }}" title="{{ item }}">{{ item }}</a>
+                    </li>
+                    {% endfor %}
+                </ul>
+            </div>
         </form>
-    </div>
-    <div class="row mb-3">
-        <h2>Your Notes</h2>
-    </div>
-    <div class="row">
-        {% for note in notes%}
-        <div class="col-md-4">
-            <div class="accordion" id="accordionExample">
-                <div class="card mb-4 shadow-sm">
-                    <div class="card-body">
-                        <ul>
-                            <li>
-                                <p>Tag: <small>
-                                    {{ note.tags.all|join:", " }}
-                                </small></p>
-                                {%if not note.done%}
-                                <a href="{% url 'detail_note' note.id %}" role="button" class="text-decoration-none"
-                                ><p class="text-secondary">{{ note.created }}: </p>
-                                    <p><strong>{{note.name}}</strong></p>
-                                    <p class="text-dark">{{note.description}} </p>
-                                    <p>{{ note.status }} </p>
-                                </a
-                                >
-                                <div class="btn-group">
-                                    <a class="btn btn-outline-info mx-1" href="{% url 'set_done_note' note.id %}">Mark Done</a>
-                                    <a class="btn btn-outline-danger"
-                                       href="{% url 'delete_note' note.id %}">Delete note</a>
-                                </div>
-                                {% else %}
+        </div>
+        <div class="row mb-3">
+            <h2>Your Notes</h2>
+        </div>
+        <div class="row">
+            {% for note in notes %}
+                <div class="col-md-4">
+                    <div class="accordion" id="accordionExample">
+                        <div class="card mb-4 shadow-sm">
+                            <div class="card-body">
+                                <ul>
+                                    <li>
+                                        <p>Tag: <small>
+                                            {{ note.tags.all|join:", " }}
+                                        </small></p>
+                                        {% if not note.done %}
+                                            <a href="{% url 'detail_note' note.id %}" role="button"
+                                               class="text-decoration-none"
+                                            ><p class="text-secondary">{{ note.created }}: </p>
+                                                <p><strong>{{ note.name }}</strong></p>
+                                                <p class="text-dark">{{ note.description }} </p>
+                                                <p>{{ note.status }} </p>
+                                            </a
+                                            >
+                                            <div class="btn-group">
+                                                <a class="btn btn-outline-info mx-1"
+                                                   href="{% url 'set_done_note' note.id %}">Mark Done</a>
+                                                <a class="btn btn-outline-danger"
+                                                   href="{% url 'delete_note' note.id %}">Delete note</a>
+                                            </div>
+                                        {% else %}
 
-                                <a href="{% url 'detail_note' note.id %}" role="button" class="secondary"
-                                ><s>{{note.name}}</s></a
-                                >
-                                {% endif %}
-                            </li>
-                        </ul>
+                                            <a href="{% url 'detail_note' note.id %}" role="button" class="secondary"
+                                            ><s>{{ note.name }}</s></a
+                                            >
+                                        {% endif %}
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
                     </div>
                 </div>
-            </div>
-        </div>
-        {% endfor %}
-        {% endblock %}
+            {% endfor %}
+{% endblock %}

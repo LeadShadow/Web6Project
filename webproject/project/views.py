@@ -16,11 +16,12 @@ from .models import Tag, Note, User, Files, AddressBook
 from .forms import TagForm, NoteForm, ABForm
 
 # Create your views here.
-from .validation_ab import Phone, Birthday, Email, DateIsNotValid, DateVeryBig, items
+from .validation_ab import Phone, Birthday, Email, DateIsNotValid, DateVeryBig, items_ab
 from .files_libs import *
 import requests
 from bs4 import BeautifulSoup
 from datetime import datetime
+items_note = ['Sort by ascending date', 'Sort by descending date', 'Sort tags']
 
 
 def user_signup(request):
@@ -104,7 +105,7 @@ def note(request):
             choice_tags = Tag.objects.filter(name__in=list_tags, user_id=request.user)  # WHERE name in []
             for tag in choice_tags.iterator():
                 new_note.tags.add(tag)
-            return redirect(to='main')
+            return redirect(to='show_notes')
         except ValueError as err:
             return render(request, 'project/add_note.html', {"tags": tags, 'form': NoteForm(), 'error': err})
 
@@ -113,10 +114,11 @@ def note(request):
 
 @login_required
 def show_notes(request):
+    global items_note
     notes = []
     if request.user.is_authenticated:
         notes = Note.objects.filter(user_id=request.user).all()
-    return render(request, 'project/show_note.html', {"notes": notes})
+    return render(request, 'project/show_note.html', {"notes": notes, 'items': items_note})
 
 
 @login_required
@@ -153,6 +155,28 @@ def edit_note(request, note_id):
     return render(request, 'project/add_note.html', {"tags": tags, 'form': NoteForm(instance=note)})
 
 
+@login_required
+@csrf_protect
+def filter_note(request, filter):
+    global items_note
+    print('1')
+    notes = []
+    filt = filter
+    if request.method == 'GET':
+        if filter == 'Sort tags':
+            notes = Note.objects.filter(user_id=request.user).all().order_by('tags').values()
+        elif filter == 'Sort by ascending date':
+            notes = Note.objects.filter(user_id=request.user).all().order_by('-created').values()
+        elif filter == 'Sort by descending date':
+            notes = Note.objects.filter(user_id=request.user).all().order_by('created').values()
+        else:
+            search_value = request.GET.get('search_key')
+            note = Note.objects.filter(
+                Q(user_id=request.user, tags=search_value) | Q(user_id=request.user, name=search_value))
+            notes = list(note)
+        return render(request, 'project/show_note.html', {'notes': notes, 'items': items_note, 'filt': filt})
+
+
 @csrf_exempt
 @login_required
 def addressbook(request):
@@ -167,11 +191,19 @@ def addressbook(request):
                 raise DateVeryBig
             email = Email(request.POST['email']).value
             address = request.POST['address']
+            storage = messages.get_messages(request)
+            storage.used = True
+            ab_phone = AddressBook.objects.filter(phone=phone)
+            ab_email = AddressBook.objects.filter(email=email)
+            if ab_phone:
+                messages.error(request, 'This number already used')
+                return render(request, 'project/contact_edit.html', {'form': form})
+            if ab_email:
+                messages.error(request, 'This address already used')
+                return render(request, 'project/contact_edit.html', {'form': form})
             ab = AddressBook(name=name, phone=phone, birthday=birthday, email=email, address=address,
                              user_id=request.user)
             ab.save()
-            storage = messages.get_messages(request)
-            storage.used = True
         except ValueError:
             messages.error(request, 'Invalid phone try 10 or 12 numbers')
             return render(request, 'project/contact_edit.html', {'form': form})
@@ -234,17 +266,17 @@ def delete_ab(request, ab_id):
 
 @login_required
 def show_addressbook(request):
-    global items
+    global items_ab
     contacts = AddressBook.objects.filter(user_id=request.user).all()
     if request.method == 'GET':
-        return render(request, 'project/contacts.html', {'contacts': contacts, 'items': items})
+        return render(request, 'project/contacts.html', {'contacts': contacts, 'items': items_ab})
     return render(request, 'project/contacts.html')
 
 
 @login_required
 @csrf_protect
 def filter_addressbook(request, filter):
-    global items
+    global items_ab
     contacts = []
     filt = filter
     if request.method == 'GET':
@@ -259,19 +291,19 @@ def filter_addressbook(request, filter):
             contact = AddressBook.objects.filter(
                 Q(user_id=request.user, phone=search_value) | Q(user_id=request.user, name=search_value))
             contacts = list(contact)
-        return render(request, 'project/contacts.html', {'contacts': contacts, 'items': items, 'filt': filt})
+        return render(request, 'project/contacts.html', {'contacts': contacts, 'items': items_ab, 'filt': filt})
 
 
 @csrf_protect
 @login_required
 def search(request):
-    global items
+    global items_ab
     if request.method == 'POST':
         search_value = request.POST.get('search_key')
         contact = AddressBook.objects.filter(
             Q(user_id=request.user, phone=search_value) | Q(user_id=request.user, name=search_value))
         contacts = list(contact)
-        return render(request, 'project/contacts.html', {'contacts': contacts, 'items': items})
+        return render(request, 'project/contacts.html', {'contacts': contacts, 'items': items_ab})
     else:
         return redirect(to='filter_addressbook')
 

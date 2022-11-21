@@ -20,9 +20,10 @@ from .validation_ab import Phone, Birthday, Email, DateIsNotValid, DateVeryBig, 
 from .files_libs import *
 import requests
 from bs4 import BeautifulSoup
-from datetime import datetime
-items_note = ['Sort by ascending date', 'Sort by descending date', 'Sort by name']
-items_tag = ['Search by name']
+from datetime import datetime, date
+
+items_note = ['Sort by ascending date', 'Sort by descending date', 'Sort tags']
+
 
 def user_signup(request):
     if request.method == 'GET':
@@ -163,59 +164,19 @@ def filter_note(request, filter):
     notes = []
     filt = filter
     if request.method == 'GET':
-        if filter == 'Sort by name':
-            notes = Note.objects.filter(user_id=request.user).all().order_by('name').values()
+        if filter == 'Sort tags':
+            notes = Note.objects.filter(user_id=request.user).all().order_by('tags').values()
         elif filter == 'Sort by ascending date':
             notes = Note.objects.filter(user_id=request.user).all().order_by('-created').values()
         elif filter == 'Sort by descending date':
             notes = Note.objects.filter(user_id=request.user).all().order_by('created').values()
         else:
             search_value = request.GET.get('search_key')
-            notes = Note.objects.filter(
-                Q(user_id=request.user, name=search_value) | Q(user_id=request.user, description=search_value))
-            notes = list(notes)
+            note = Note.objects.filter(
+                Q(user_id=request.user, tags__name__icontains=search_value) | Q(user_id=request.user,
+                                                                                name__icontains=search_value)).all()
+            notes = list(note)
         return render(request, 'project/show_note.html', {'notes': notes, 'items': items_note, 'filt': filt})
-
-
-@csrf_protect
-def filter_tag(request, filter):
-    global items_note
-    print('1')
-    tags = []
-    notes = []
-    filt = filter
-    if request.method == 'GET':
-        search_value = request.GET.get('search_key')
-        tags = Note.objects.filter(
-            Q(user_id=request.user, tags=search_value))
-        tags = list(tags)
-        return render(request, 'project/show_note.html', {'notes': notes, 'items': items_note, 'tags': tags, 'filt': filt})
-
-@csrf_protect
-@login_required
-def search_note(request):
-    global items_note
-    if request.method == 'POST':
-        search_value = request.POST.get('search_key')
-        notes = Note.objects.filter(
-            Q(user_id=request.user, name=search_value) | Q(user_id=request.user, description=search_value))
-        notes = list(notes)
-        return render(request, 'project/show_note.html', {'notes': notes, 'items': items_note})
-    else:
-        return redirect(to='filter_note')
-
-@csrf_protect
-@login_required
-def search_tag(request):
-    tags = []
-    if request.method == 'POST':
-        search_value = request.POST.get('search_key')
-        tags = Note.objects.filter(
-            Q(user_id=request.user, tags=search_value))
-        tags = list(tags)
-        return render(request, 'project/show_note.html', {'tags': tags, 'items': items_note})
-    else:
-        return redirect(to='filter_tag')
 
 
 @csrf_exempt
@@ -327,11 +288,17 @@ def filter_addressbook(request, filter):
             contacts = AddressBook.objects.filter(user_id=request.user).all().order_by('-birthday').values()
         elif filter == 'Sort by descending date':
             contacts = AddressBook.objects.filter(user_id=request.user).all().order_by('birthday').values()
-        else:
+        elif filter == 'search':
             search_value = request.GET.get('search_key')
             contact = AddressBook.objects.filter(
-                Q(user_id=request.user, phone=search_value) | Q(user_id=request.user, name=search_value))
+                Q(user_id=request.user, phone__contains=search_value) | Q(user_id=request.user,
+                                                                          name__icontains=search_value) | Q(
+                    user_id=request.user, email__contains=search_value))
             contacts = list(contact)
+        elif filter == 'to_birthday':
+            days_to_bd = int(request.GET.get('search_days'))
+            all_contact = AddressBook.objects.filter(user_id=request.user).all()
+            contacts = [contact for contact in all_contact if 0 <= days_to_birthdays(contact.birthday) <= days_to_bd]
         return render(request, 'project/contacts.html', {'contacts': contacts, 'items': items_ab, 'filt': filt})
 
 
@@ -341,6 +308,7 @@ def search(request):
     global items_ab
     if request.method == 'POST':
         search_value = request.POST.get('search_key')
+        print(search_value)
         contact = AddressBook.objects.filter(
             Q(user_id=request.user, phone=search_value) | Q(user_id=request.user, name=search_value))
         contacts = list(contact)
@@ -349,9 +317,23 @@ def search(request):
         return redirect(to='filter_addressbook')
 
 
+@csrf_protect
+@login_required
+def days_to_birthday(request):
+    global items_ab
+    if request.method == 'POST':
+        days_to_bd = int(request.POST.get('search_days'))
+        # print(days_to_bd)
+        contact = AddressBook.objects.filter(user_id=request.user).all()
+        contacts = list(contact)
+        print(contacts)
+        return render(request, 'project/contacts.html', {'contacts': contacts, 'items': items_ab})
+    else:
+        return redirect(to='filter_addressbook')
+
+
 @login_required
 def parser(request):
-
     # CURRENCY
     # https://https://finance.i.ua/
     currency = []
@@ -605,7 +587,6 @@ def file_upload(request):
         new_file.save()
         return redirect('view_files')
     return render(request, 'project/file_upload.html')
-
 
 
 def about_us(request):

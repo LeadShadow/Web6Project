@@ -87,3 +87,4 @@ class Email(Field):
                 raise AttributeError(f"Неправильний тип значення {value}")
             self.__value = result
 
+

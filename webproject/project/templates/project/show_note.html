@@ -2,12 +2,12 @@
 {% block content %}
     <div class="container mt-5">
         <div class="mb-1">
-            <form class="d-flex flex-row align-items-center flex-wrap" action="search_note">
+            <form class="d-flex flex-row align-items-center flex-wrap" action="search">
             <div class="input-group w-25">
                 <input id="colFormLabelEmail"
                        class="form-control col-12 my-1 me-sm-2 w-auto"
                        type="text"
-                       placeholder="Name or description"
+                       placeholder="name or tag"
                        name="search_key"
                 />
             </div>
@@ -15,21 +15,7 @@
         </form>
     </div>
     <div class="mb-5">
-        <div class="mb-1">
-            <form class="d-flex flex-row align-items-center flex-wrap" action="search_tag">
-            <div class="input-group w-25">
-                <input id="colFormLabelEmail"
-                       class="form-control col-12 my-1 me-sm-2 w-auto"
-                       type="text"
-                       placeholder="Tag"
-                       name="search_key"
-                />
-            </div>
-            <button class="btn btn-sm btn-outline-secondary " type="submit">Search</button>
-        </form>
-    </div>
-    <div class="mb-5">
-        <form class="d-flex flex-row align-items-center flex-wrap" action="/show_note">
+        <form class="d-flex flex-row align-items-center flex-wrap" action="/show_notes">
             <div class="dropdown col-md-4">
                 <button class="btn btn-outline-secondary dropdown-toggle" type="button" id="dropdownMenuButton1"
                         data-bs-toggle="dropdown" aria-expanded="false" style="margin-right: 340px">

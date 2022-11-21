@@ -20,7 +20,8 @@ from .validation_ab import Phone, Birthday, Email, DateIsNotValid, DateVeryBig, 
 from .files_libs import *
 import requests
 from bs4 import BeautifulSoup
-from datetime import datetime
+from datetime import datetime, date
+
 items_note = ['Sort by ascending date', 'Sort by descending date', 'Sort tags']
 
 
@@ -276,6 +277,17 @@ def show_addressbook(request):
 @login_required
 @csrf_protect
 def filter_addressbook(request, filter):
+    def days_to_birthday(birthday) -> int:
+        if birthday is None:
+            return -1
+        print(type(birthday))
+        # this_birthday = birthday.date()
+        this_day = datetime.today().date()
+        birthday_day = date(this_day.year, birthday.month, birthday.day)
+        if birthday_day < this_day:
+            birthday_day = date(this_day.year + 1, birthday.month, birthday.day)
+        return int((birthday_day - this_day).days)
+
     global items_ab
     contacts = []
     filt = filter
@@ -286,11 +298,16 @@ def filter_addressbook(request, filter):
             contacts = AddressBook.objects.filter(user_id=request.user).all().order_by('-birthday').values()
         elif filter == 'Sort by descending date':
             contacts = AddressBook.objects.filter(user_id=request.user).all().order_by('birthday').values()
-        else:
+        elif filter == 'search':
             search_value = request.GET.get('search_key')
             contact = AddressBook.objects.filter(
-                Q(user_id=request.user, phone=search_value) | Q(user_id=request.user, name=search_value))
+                Q(user_id=request.user, phone__contains=search_value) | Q(user_id=request.user,
+                name__icontains=search_value) | Q(user_id=request.user, email__contains=search_value))
             contacts = list(contact)
+        elif filter == 'to_birthday':
+            days_to_bd = int(request.GET.get('search_days'))
+            all_contact = AddressBook.objects.filter(user_id=request.user).all()
+            contacts = [contact for contact in all_contact if 0 <= days_to_birthday(contact.birthday) <= days_to_bd]
         return render(request, 'project/contacts.html', {'contacts': contacts, 'items': items_ab, 'filt': filt})
 
 
@@ -300,6 +317,7 @@ def search(request):
     global items_ab
     if request.method == 'POST':
         search_value = request.POST.get('search_key')
+        print(search_value)
         contact = AddressBook.objects.filter(
             Q(user_id=request.user, phone=search_value) | Q(user_id=request.user, name=search_value))
         contacts = list(contact)
@@ -308,9 +326,23 @@ def search(request):
         return redirect(to='filter_addressbook')
 
 
+@csrf_protect
+@login_required
+def days_to_birthday(request):
+    global items_ab
+    if request.method == 'POST':
+        days_to_bd = int(request.POST.get('search_days'))
+        # print(days_to_bd)
+        contact = AddressBook.objects.filter(user_id=request.user).all()
+        contacts = list(contact)
+        print(contacts)
+        return render(request, 'project/contacts.html', {'contacts': contacts, 'items': items_ab})
+    else:
+        return redirect(to='filter_addressbook')
+
+
 @login_required
 def parser(request):
-
     # CURRENCY
     # https://https://finance.i.ua/
     currency = []
@@ -564,7 +596,6 @@ def file_upload(request):
         new_file.save()
         return redirect('view_files')
     return render(request, 'project/file_upload.html')
-
 
 
 def about_us(request):

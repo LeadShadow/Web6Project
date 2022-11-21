@@ -8,14 +8,28 @@
                 <input id="colFormLabelEmail"
                        class="form-control col-12 my-1 me-sm-2 w-auto"
                        type="text"
-                       placeholder="name or phone number"
+                       placeholder="name, email or phone number"
                        name="search_key"
                 />
             </div>
             <button class="btn btn-sm btn-outline-secondary " type="submit">Search</button>
         </form>
     </div>
+    <div class="mb-1">
+        <form class="d-flex flex-row align-items-center flex-wrap" action="to_birthday">
+            <div class="input-group w-25">
+                <input id="colFormLabelEmail"
+                       class="form-control col-12 my-1 me-sm-2 w-auto"
+                       type="number"
+                       placeholder="days to birthday"
+                       name="search_days"
+                />
+            </div>
+            <button class="btn btn-sm btn-outline-secondary"  type="submit">Search</button>
+        </form>
+    </div>
     <div class="mb-5">
+
         <form class="d-flex flex-row align-items-center flex-wrap" action="/show_contacts">
             <div class="dropdown col-md-4">
                 <button class="btn btn-outline-secondary dropdown-toggle" type="button" id="dropdownMenuButton1"

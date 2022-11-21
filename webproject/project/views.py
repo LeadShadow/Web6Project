@@ -173,7 +173,8 @@ def filter_note(request, filter):
         else:
             search_value = request.GET.get('search_key')
             note = Note.objects.filter(
-                Q(user_id=request.user, tags=search_value) | Q(user_id=request.user, name=search_value))
+                Q(user_id=request.user, tags__name__icontains=search_value) | Q(user_id=request.user,
+                                                                                name__icontains=search_value)).all()
             notes = list(note)
         return render(request, 'project/show_note.html', {'notes': notes, 'items': items_note, 'filt': filt})
 
@@ -277,17 +278,6 @@ def show_addressbook(request):
 @login_required
 @csrf_protect
 def filter_addressbook(request, filter):
-    def days_to_birthday(birthday) -> int:
-        if birthday is None:
-            return -1
-        print(type(birthday))
-        # this_birthday = birthday.date()
-        this_day = datetime.today().date()
-        birthday_day = date(this_day.year, birthday.month, birthday.day)
-        if birthday_day < this_day:
-            birthday_day = date(this_day.year + 1, birthday.month, birthday.day)
-        return int((birthday_day - this_day).days)
-
     global items_ab
     contacts = []
     filt = filter
@@ -302,12 +292,13 @@ def filter_addressbook(request, filter):
             search_value = request.GET.get('search_key')
             contact = AddressBook.objects.filter(
                 Q(user_id=request.user, phone__contains=search_value) | Q(user_id=request.user,
-                name__icontains=search_value) | Q(user_id=request.user, email__contains=search_value))
+                                                                          name__icontains=search_value) | Q(
+                    user_id=request.user, email__contains=search_value))
             contacts = list(contact)
         elif filter == 'to_birthday':
             days_to_bd = int(request.GET.get('search_days'))
             all_contact = AddressBook.objects.filter(user_id=request.user).all()
-            contacts = [contact for contact in all_contact if 0 <= days_to_birthday(contact.birthday) <= days_to_bd]
+            contacts = [contact for contact in all_contact if 0 <= days_to_birthdays(contact.birthday) <= days_to_bd]
         return render(request, 'project/contacts.html', {'contacts': contacts, 'items': items_ab, 'filt': filt})
 
 

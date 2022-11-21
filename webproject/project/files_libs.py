@@ -1,5 +1,9 @@
 from pathlib import Path
 from datetime import datetime, date
+
+from django.conf import settings
+from django.http import request
+from django.views.decorators.csrf import csrf_protect
 from google.oauth2 import service_account
 from googleapiclient.discovery import build
 
@@ -37,7 +41,7 @@ def file_type(ext: str) -> str:
         return 'Others'
 
 
-def days_to_birthday(birthday) -> int:
+def days_to_birthdays(birthday) -> int:
     if birthday is None:
         return -1
     this_day = datetime.today().date()

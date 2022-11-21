@@ -21,8 +21,8 @@ from .files_libs import *
 import requests
 from bs4 import BeautifulSoup
 from datetime import datetime
-items_note = ['Sort by ascending date', 'Sort by descending date', 'Sort tags']
-
+items_note = ['Sort by ascending date', 'Sort by descending date', 'Sort by name']
+items_tag = ['Search by name']
 
 def user_signup(request):
     if request.method == 'GET':
@@ -160,12 +160,12 @@ def edit_note(request, note_id):
 def filter_note(request, filter):
     global items_note
     print('1')
+    tags = []
     notes = []
-    tags = Tag.objects.filter(user_id=request.user).all()
     filt = filter
     if request.method == 'GET':
-        if filter == 'Sort tags':
-            notes = Note.objects.filter(user_id=request.user).all().order_by('tags').values()
+        if filter == 'Sort by name':
+            notes = Note.objects.filter(user_id=request.user).all().order_by('name').values()
         elif filter == 'Sort by ascending date':
             notes = Note.objects.filter(user_id=request.user).all().order_by('-created').values()
         elif filter == 'Sort by descending date':
@@ -173,7 +173,10 @@ def filter_note(request, filter):
         else:
             search_value = request.GET.get('search_key')
             notes = Note.objects.filter(
-                Q(user_id=request.user, tags=search_value) | Q(user_id=request.user, name=search_value))
+                Q(user_id=request.user, name=search_value) | Q(user_id=request.user, description=search_value))
+            notes = list(notes)
+            notes = Note.objects.filter(
+                Q(user_id=request.user, tags=search_value))
             notes = list(notes)
         return render(request, 'project/show_note.html', {'notes': notes, 'items': items_note, 'tags': tags, 'filt': filt})
 
@@ -185,9 +188,20 @@ def search_note(request):
     if request.method == 'POST':
         search_value = request.POST.get('search_key')
         notes = Note.objects.filter(
-            Q(user_id=request.user, tags=search_value) | Q(user_id=request.user, name=search_value))
+            Q(user_id=request.user, name=search_value) | Q(user_id=request.user, description=search_value))
         notes = list(notes)
         return render(request, 'project/show_note.html', {'notes': notes, 'items': items_note})
+    else:
+        return redirect(to='filter_note')
+
+@csrf_protect
+@login_required
+def search_tag(request):
+    tags = []
+    if request.method == 'POST':
+        search_value = request.POST.get('search_key')
+        tags = Tag.objects.filter(user_id=request.user, name=search_value)
+        return render(request, 'project/show_tags.html', {'tags': tags})
     else:
         return redirect(to='filter_note')
 

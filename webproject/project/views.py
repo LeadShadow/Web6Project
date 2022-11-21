@@ -160,7 +160,6 @@ def edit_note(request, note_id):
 def filter_note(request, filter):
     global items_note
     print('1')
-    tags = []
     notes = []
     filt = filter
     if request.method == 'GET':
@@ -175,11 +174,22 @@ def filter_note(request, filter):
             notes = Note.objects.filter(
                 Q(user_id=request.user, name=search_value) | Q(user_id=request.user, description=search_value))
             notes = list(notes)
-            notes = Note.objects.filter(
-                Q(user_id=request.user, tags=search_value))
-            notes = list(notes)
-        return render(request, 'project/show_note.html', {'notes': notes, 'items': items_note, 'tags': tags, 'filt': filt})
+        return render(request, 'project/show_note.html', {'notes': notes, 'items': items_note, 'filt': filt})
 
+
+@csrf_protect
+def filter_tag(request, filter):
+    global items_note
+    print('1')
+    tags = []
+    notes = []
+    filt = filter
+    if request.method == 'GET':
+        search_value = request.GET.get('search_key')
+        tags = Note.objects.filter(
+            Q(user_id=request.user, tags=search_value))
+        tags = list(tags)
+        return render(request, 'project/show_note.html', {'notes': notes, 'items': items_note, 'tags': tags, 'filt': filt})
 
 @csrf_protect
 @login_required
@@ -200,10 +210,12 @@ def search_tag(request):
     tags = []
     if request.method == 'POST':
         search_value = request.POST.get('search_key')
-        tags = Tag.objects.filter(user_id=request.user, name=search_value)
-        return render(request, 'project/show_tags.html', {'tags': tags})
+        tags = Note.objects.filter(
+            Q(user_id=request.user, tags=search_value))
+        tags = list(tags)
+        return render(request, 'project/show_note.html', {'tags': tags, 'items': items_note})
     else:
-        return redirect(to='filter_note')
+        return redirect(to='filter_tag')
 
 
 @csrf_exempt

@@ -57,8 +57,10 @@
                                             <div class="btn-group">
                                                 <a class="btn btn-outline-info mx-1"
                                                    href="{% url 'set_done_note' note.id %}">Mark Done</a>
+                                                <a class="btn btn-outline-info mx-1"
+                                                   href="{% url 'edit_note' note.id %}">Edit</a>
                                                 <a class="btn btn-outline-danger"
-                                                   href="{% url 'delete_note' note.id %}">Delete note</a>
+                                                   href="{% url 'delete_note' note.id %}">Delete</a>
                                             </div>
                                         {% else %}
 

@@ -15,7 +15,7 @@ class Tag(models.Model):
         ]
 
     def __str__(self):
-        return f"{self.name}:{self.user_id}"
+        return f"{self.name}"
 
 
 

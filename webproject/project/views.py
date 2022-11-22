@@ -82,7 +82,7 @@ def tag(request):
             tag = form.save(commit=False)
             tag.user_id = request.user
             tag.save()
-            return redirect(to='main')
+            return redirect(to='add_note')
         except ValueError as err:
             return render(request, 'project/add_tags.html', {'form': TagForm(), 'error': err})
         except IntegrityError as err:
@@ -137,24 +137,27 @@ def delete_note(request, note_id):
 
 @login_required
 def edit_note(request, note_id):
-    note = Note.objects.get(pk=note_id, user_id=request.user)
+    new_note = Note.objects.get(pk=note_id, user_id=request.user)
     tags = Tag.objects.filter(user_id=request.user).all()
     if request.method == 'POST':
         try:
             list_tags = request.POST.getlist('tags')
-            form = NoteForm(request.POST, instance=note)
+            print('1')
+            form = NoteForm(request.POST)
+            print('1')
             new_note = form.save(commit=False)
             new_note.user_id = request.user
             new_note.save()
-            choice_tags = Tag.objects.filter(name__in=list_tags, user_id=request.user)
+            choice_tags = Tag.objects.filter(name__in=list_tags, user_id=request.user)  # WHERE name in []
             for tag in choice_tags.iterator():
                 new_note.tags.add(tag)
-            return redirect(to='main')
+            note = Note.objects.get(pk=note_id, user_id=request.user)
+            note.delete()
+            return redirect(to='show_notes')
         except ValueError as err:
-            return render(request, 'project/add_note.html', {"tags": tags, 'form': NoteForm(), 'error': err})
+            return render(request, 'project/edit_note.html', {"tags": tags, 'form': NoteForm(), 'error': err})
 
-    return render(request, 'project/add_note.html', {"tags": tags, 'form': NoteForm(instance=note)})
-
+    return render(request, 'project/edit_note.html', {"tags": tags, 'form': NoteForm()})
 
 @login_required
 @csrf_protect

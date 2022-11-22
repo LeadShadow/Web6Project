@@ -23,6 +23,9 @@ from bs4 import BeautifulSoup
 from datetime import datetime, date
 
 items_note = ['Sort by ascending date', 'Sort by descending date', 'Sort tags']
+sorted_news = []
+currency = []
+filters_for_news = ['Sort by ascending news', 'Sort by descending news']
 
 
 def user_signup(request):
@@ -158,6 +161,7 @@ def edit_note(request, note_id):
             return render(request, 'project/edit_note.html', {"tags": tags, 'form': NoteForm(), 'error': err})
 
     return render(request, 'project/edit_note.html', {"tags": tags, 'form': NoteForm()})
+
 
 @login_required
 @csrf_protect
@@ -337,9 +341,10 @@ def days_to_birthday(request):
 
 @login_required
 def parser(request):
+    global sorted_news
+    global currency
     # CURRENCY
     # https://https://finance.i.ua/
-    currency = []
     parsing_error = False
 
     base_url = 'https://finance.i.ua/'
@@ -461,7 +466,7 @@ def parser(request):
             result.update({"href": 'https://www.pravda.com.ua' + href})
             result.update({"source": data_source})
             news.append(result)
-
+    news = filter(lambda nn: nn['dtime'] <= datetime.now(), news)
     sorted_news = sorted(news, key=lambda d: d['dtime'])
     sorted_news.reverse()
 
@@ -476,63 +481,6 @@ def parser(request):
                     print(k, v)
 
     return render(request, 'project/info.html', {"news": sorted_news, 'currency': currency})
-
-
-@login_required
-def view_files(request):
-    all_files = Files.objects.filter(user_id=request.user).all()
-    return render(request, 'project/files.html', {'gfiles': all_files, 'filt': ''})
-
-
-@login_required
-def filter_files(request, filt):
-    all_files = Files.objects.filter(user_id=request.user, type=filt).all()
-    return render(request, 'project/files.html', {'gfiles': all_files, 'filt': filt})
-
-
-@login_required
-def file_download(request, file_id):
-    down_file = Files.objects.filter(user_id=request.user, id=file_id).first()
-    fileid = down_file.up_id
-    grequest = service.files().get_media(fileId=fileid)
-    down_dir = DOWNLOAD_DIR / str(request.user)
-    down_dir.mkdir(exist_ok=True, parents=True)
-    filename = DOWNLOAD_DIR / str(request.user) / down_file.name
-    fh = io.FileIO(filename, 'wb')
-    downloader = MediaIoBaseDownload(fh, grequest)
-    done = False
-    while done is False:
-        status, done = downloader.next_chunk()
-        print("Download %d%%." % int(status.progress() * 100))
-    return redirect('view_files')
-
-
-@login_required
-def file_upload(request):
-    if request.method == 'POST' and request.FILES['myfile']:
-        file = request.FILES['myfile']
-        if os.path.exists(UPLOAD_DIR / file.name):
-            os.remove(UPLOAD_DIR / file.name)
-        fs = FileSystemStorage(UPLOAD_DIR)
-        filename = fs.save(file.name, file)
-        ext = get_extension(filename)
-        filetype = file_type(ext)
-        file_path = UPLOAD_DIR / filename
-        file_metadata = {
-            'name': filename,
-            'parents': [GDRIVE_FOLDER_ID]
-        }
-        media = MediaFileUpload(file_path, resumable=True)
-        r = service.files().create(body=file_metadata, media_body=media, fields='id, size, createdTime').execute()
-        print(r)
-        new_file = Files(user_id=request.user, name=filename)
-        new_file.size = int(r['size'])
-        new_file.type = filetype
-        new_file.up_id = r['id']
-        new_file.up_time = r['createdTime']
-        new_file.save()
-        return redirect('view_files')
-    return render(request, 'project/file_upload.html')
 
 
 @login_required

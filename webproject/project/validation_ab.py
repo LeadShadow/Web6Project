@@ -11,6 +11,10 @@ class DateVeryBig(Exception):
     """This date bigger than present year"""
 
 
+class EmptyName(Exception):
+    pass
+
+
 class Field:
     def __init__(self, value: str) -> None:
         self.__value = None

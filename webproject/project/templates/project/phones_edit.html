@@ -1,0 +1,85 @@
+{% extends "./base.html" %}
+
+{% block content %}
+    {% if messages %}
+        {% for msg in messages %}
+            <div class="alert alert-{{ msg.tags }} d-flex align-items-center mt-5" role="alert">
+                <div>
+                    {{ msg }}
+                </div>
+            </div>
+        {% endfor %}
+    {% endif %}
+    <div class="container mt-5">
+        <div class="row justify-content-center mb-5">
+            <h2>Edit phones</h2>
+        </div>
+        <div class="row justify-content-center">
+            <form class="col-sm-6 rounded shadow-lg" action="" method="POST">
+
+                <div class="row justify-content-center mb-2 pt-3">
+                </div>
+                <div class="form-group mb-2">
+                    <div class="input-group">
+                        <span class="input-group-text" id="addon-wrapping">Fullname: </span>
+                        <input id="colFormLabelFullname"
+                               class="form-control col-sm-12"
+                               type="text"
+                               placeholder="Fullname"
+                               name="fullname"
+                               disabled="true"
+                               value="{{ contact.name }}">
+                    </div>
+                </div>
+                {% for phone in phones %}
+
+
+                <div class="form-group mb-2">
+                    <div class="input-group">
+                        <span class="input-group-text" id="addon-wrapping">Phone: </span>
+                        <input id="colFormLabelFullname"
+                               class="form-control col-sm-12"
+                               type="text"
+                               placeholder="Fullname"
+                               name="phone-{{ phone.id }}"
+                               value="{{ phone.phone_number }}">
+                        <button type="submit" value="{{ phone.id }}" name="subbutton"
+                                class="btn btn-outline-primary col-sm-0">&nbsp;&nbsp;Edit&nbsp;&nbsp;
+                        </button>
+                        <button type="button"
+                                onclick="window.location.href='{% url "phone_del" phone.id %}';"
+                                class="btn btn-outline-danger col-sm-0">Delete
+                        </button>
+                    </div>
+                </div>
+                {% endfor %}
+
+            <div class="form-group mb-2">
+                <div class="input-group flex-nowrap">
+                    <span class="input-group-text" id="addon-wrapping">New Phone: </span>
+                    <input
+                            type="text"
+                            class="form-control"
+                            placeholder="Phone"
+                            aria-label="Phone"
+                            aria-describedby="addon-wrapping"
+                            name="phone-0"
+                            value="{{new_phone}}"
+                    >
+                    <button type="submit" value="0" name="subbutton"
+                            class="btn btn-outline-success col-sm-0">&nbsp;&nbsp;Add&nbsp;&nbsp;
+                    </button>
+                </div>
+            </div>
+
+                <div class="form-group">
+                    <div class="form-group  mb-2">
+                        <a href="{% url 'show_contacts' %}" class="btn btn-secondary col-sm-12" role="button">
+                            Close
+                        </a>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+{% endblock %}

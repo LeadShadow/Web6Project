@@ -1,5 +1,15 @@
 {% extends "project/base.html" %}
 {% block content %}
+    {% if messages %}
+        {% for msg in messages %}
+            <div class="alert alert-{{ msg.tags }} d-flex align-items-center mt-5" role="alert">
+                <div>
+                    {{ msg }}
+                </div>
+            </div>
+        {% endfor %}
+    {% endif %}
+
     <div class="container mt-5">
         <div class="justify-content-center mb-5">
             <div class="row">

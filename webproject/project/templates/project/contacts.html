@@ -1,36 +1,47 @@
 {% extends "./base.html" %}
 
 {% block content %}
+    {% if messages %}
+        {% for msg in messages %}
+            <div class="alert alert-{{ msg.tags }} d-flex align-items-center mt-5" role="alert">
+                <div>
+                    {{ msg }}
+                </div>
+            </div>
+        {% endfor %}
+    {% endif %}
+
     <div class="container mt-5">
     <div class="row">
         <div class="col-md-5">
             <form class="d-flex flex-row align-items-center flex-wrap" action="search">
-                <div class="input-group w-25">
+                <div class="input-group w-75">
                     <input id="colFormLabelEmail"
-                           class="form-control col-12 my-1 me-sm-2 w-auto"
+                           class="form-control me-sm-2"
                            type="text"
                            placeholder="name, email or phone number"
                            name="search_key"
                     />
                 </div>
-                <button class="btn btn-sm btn-outline-secondary " type="submit">Search</button>
+                <button class="btn btn-outline-secondary" type="submit">Search</button>
             </form>
         </div>
+
         <div class="col-md-5">
             <form class="d-flex flex-row align-items-center flex-wrap" action="to_birthday">
-                <div class="input-group w-25">
+                <div class="input-group w-75">
                     <input id="colFormLabelEmail"
-                           class="form-control col-5 my-1 me-sm-2 w-auto"
+                           class="form-control me-sm-2"
                            type="number"
                            placeholder="days to birthday"
                            name="search_days"
                     />
                 </div>
-                <button class="btn btn-sm btn-outline-secondary" type="submit">Search</button>
+                <button class="btn btn-outline-secondary" type="submit">Search</button>
             </form>
         </div>
-        <div class="col-md-2">
 
+        <div class="col-md-2">
             <form class="d-flex flex-row align-items-center flex-wrap" action="/show_contacts">
                 <div class="dropdown col-md-4">
                     <button class="btn btn-outline-secondary dropdown-toggle" type="button" id="dropdownMenuButton1"
@@ -48,6 +59,7 @@
             </form>
         </div>
     </div>
+
     <div class="row mb-3">
         <h2>Contacts</h2>
     </div>
@@ -76,11 +88,12 @@
                             </p>
                             <p class="card-text"><strong>Birthday: </strong>{{ contact.birthday }}</p>
                             <p class="card-text"><strong>Address: </strong>{{ contact.address }}</p>
-                            <p class="card-text"><strong>Phone: </strong>{{ contact.phone }}</p>
-                            <p class="card-text"><strong>Email: </strong>{{ contact.email }}</p>
+                            <p class="card-text"><strong>Phone: </strong>{{ contact.phone_list }}</p>
+                            <p class="card-text"><strong>Email: </strong>{{ contact.email_list }}</p>
                             <div class="d-flex justify-content-between align-items-center">
                                 <div class="btn-group" style="padding-left: 125px">
-                                    <a class="btn btn-outline-info mx-1" href="/contacts/edit/{{ contact.id }}">Edit</a>
+                                    <a class="btn btn-outline-info mx-1" href="/contacts/edit/{{ contact.id }}">
+                                        &nbsp;&nbsp;Edit&nbsp;&nbsp;</a>
                                     <a class="btn btn-outline-danger"
                                        href="/contacts/delete/{{ contact.id }}">Delete</a>
                                 </div>

@@ -3,7 +3,7 @@
 {% block content %}
     {% if messages %}
         {% for msg in messages %}
-            <div class="alert alert-danger d-flex align-items-center mt-5" role="alert">
+            <div class="alert alert-danger d-flex align-items-center" role="alert">
                 <div>
                     {{ msg }}
                 </div>
@@ -12,15 +12,14 @@
     {% endif %}
     <div class="container mt-5">
         <div class="row justify-content-center mb-5">
-            <h2>Edit contact</h2>
+            <h2>Add contact</h2>
         </div>
         <div class="row justify-content-center">
-            <form class="col-sm-6 rounded shadow-lg" action="" method="POST">
-
-                <div class="row justify-content-center mb-2 pt-3">
+            <form class="col-sm-6 col-sm-6 rounded shadow-lg" action="" method="POST">
+                <div class="row justify-content-center mb-3 pt-3">
                     <img
                             {% if pic.path %}
-                                src="{{ pic.path }}"
+                                src="{{ contact.path }}"
                             {% else %}
                                 {% load static %}
                                 src="{% static 'no_avatar.png' %}"
@@ -31,7 +30,7 @@
                                 style="object-fit: contain"
                     />
                 </div>
-                <div class="form-group mb-2">
+                <div class="form-group  mb-2">
                     <div class="input-group">
                         <span class="input-group-text" id="addon-wrapping">Fullname: </span>
                         <input id="colFormLabelFullname"
@@ -39,23 +38,26 @@
                                type="text"
                                placeholder="Fullname"
                                name="fullname"
-                               value="{{ contact.name }}"
+                               value=""
                         />
                     </div>
                 </div>
-                <div class="form-group mb-2">
-                    <div class="input-group ">
+
+                <div class="form-group  mb-2">
+                    <div class="input-group">
                         <span class="input-group-text" id="addon-wrapping">DOB: </span>
                         <input id="colFormLabelDOB"
                                class="form-control col-sm-12"
                                type="date"
                                placeholder="DOB"
                                name="dob"
-                               value="{{ contact.birthday }}"
+                               value=""
                         />
                     </div>
                 </div>
-                <div class="form-group mb-2">
+
+
+                <div class="form-group  mb-2">
                     <div class="input-group">
                         <span class="input-group-text" id="addon-wrapping">Address: </span>
                         <input id="colFormLabelAddress"
@@ -63,11 +65,12 @@
                                type="text"
                                placeholder="Address"
                                name="address"
-                               value="{{ contact.address }}"
+                               value=""
                         />
                     </div>
                 </div>
-                <div class="form-group mb-2">
+
+                <div class="form-group  mb-2">
                     <div class="input-group">
                         <span class="input-group-text" id="addon-wrapping">Phone: </span>
                         <input id="colFormLabelPhone"
@@ -75,34 +78,28 @@
                                type="text"
                                placeholder="Phone"
                                name="phone"
-                               value="{{ contact.phone_list }}"
-                               disabled="true">
-                        <button type="button"
-                                onclick="window.location.href='{% url "phones_edit" contact.id %}';"
-                                class="btn btn-outline-primary">&nbsp;&nbsp;Edit&nbsp;&nbsp;
-                        </button>
+                               value=""
+                        />
                     </div>
                 </div>
-                <div class="form-group mb-2">
-                    <div class="input-group ">
+
+                <div class="form-group  mb-2">
+                    <div class="input-group flex-nowrap">
                         <span class="input-group-text" id="addon-wrapping">Email: </span>
                         <input id="colFormLabelEmail"
                                class="form-control col-sm-12"
                                type="text"
                                placeholder="Email"
                                name="email"
-                               value="{{ contact.email_list }}"
-                               disabled="true">
-                        <button type="button"
-                                onclick="window.location.href='{% url "emails_edit" contact.id %}';"
-                                class="btn btn-outline-primary">&nbsp;&nbsp;Edit&nbsp;&nbsp;
-                        </button>
+                               value=""
+                        />
                     </div>
                 </div>
-                <div class="form-group mb-2">
-                    <div class="form-group">
+
+                <div class="form-group">
+                    <div class="form-group  mb-2">
                         <button class="btn btn-primary col-sm-12" type="submit">
-                            Update
+                            Submit
                         </button>
                     </div>
                 </div>
@@ -113,7 +110,9 @@
                         </a>
                     </div>
                 </div>
+
             </form>
+
         </div>
     </div>
 {% endblock %}

@@ -2,7 +2,9 @@ import io
 import os
 
 from django.contrib import messages
+from django.core.exceptions import ValidationError
 from django.core.files.storage import FileSystemStorage
+from django.core.validators import EmailValidator
 from django.db.models import Q
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.forms import AuthenticationForm, UserCreationForm
@@ -12,11 +14,11 @@ from django.db import IntegrityError
 from django.views.decorators.csrf import csrf_exempt, csrf_protect
 from googleapiclient.http import MediaFileUpload, MediaIoBaseDownload
 
-from .models import Tag, Note, User, Files, AddressBook
+from .models import Tag, Note, User, Files, AddressBook, Phones, Emails
 from .forms import TagForm, NoteForm, ABForm
 
 # Create your views here.
-from .validation_ab import Phone, Birthday, Email, DateIsNotValid, DateVeryBig, items_ab
+from .validation_ab import Phone, Birthday, Email, DateIsNotValid, DateVeryBig, items_ab, EmptyName
 from .files_libs import *
 import requests
 from bs4 import BeautifulSoup
@@ -85,7 +87,7 @@ def tag(request):
             tag = form.save(commit=False)
             tag.user_id = request.user
             tag.save()
-            return redirect(to='add_note')
+            return redirect(to='main')
         except ValueError as err:
             return render(request, 'project/add_tags.html', {'form': TagForm(), 'error': err})
         except IntegrityError as err:
@@ -140,27 +142,23 @@ def delete_note(request, note_id):
 
 @login_required
 def edit_note(request, note_id):
-    new_note = Note.objects.get(pk=note_id, user_id=request.user)
+    note = Note.objects.get(pk=note_id, user_id=request.user)
     tags = Tag.objects.filter(user_id=request.user).all()
     if request.method == 'POST':
         try:
             list_tags = request.POST.getlist('tags')
-            print('1')
-            form = NoteForm(request.POST)
-            print('1')
+            form = NoteForm(request.POST, instance=note)
             new_note = form.save(commit=False)
             new_note.user_id = request.user
             new_note.save()
-            choice_tags = Tag.objects.filter(name__in=list_tags, user_id=request.user)  # WHERE name in []
+            choice_tags = Tag.objects.filter(name__in=list_tags, user_id=request.user)
             for tag in choice_tags.iterator():
                 new_note.tags.add(tag)
-            note = Note.objects.get(pk=note_id, user_id=request.user)
-            note.delete()
-            return redirect(to='show_notes')
+            return redirect(to='main')
         except ValueError as err:
-            return render(request, 'project/edit_note.html', {"tags": tags, 'form': NoteForm(), 'error': err})
+            return render(request, 'project/add_note.html', {"tags": tags, 'form': NoteForm(), 'error': err})
 
-    return render(request, 'project/edit_note.html', {"tags": tags, 'form': NoteForm()})
+    return render(request, 'project/add_note.html', {"tags": tags, 'form': NoteForm(instance=note)})
 
 
 @login_required
@@ -180,54 +178,78 @@ def filter_note(request, filter):
         else:
             search_value = request.GET.get('search_key')
             note = Note.objects.filter(
-                Q(user_id=request.user, tags__name__icontains=search_value) | Q(user_id=request.user,
-                                                                                name__icontains=search_value)).all()
+                Q(user_id=request.user, tags=search_value) | Q(user_id=request.user, name=search_value))
             notes = list(note)
         return render(request, 'project/show_note.html', {'notes': notes, 'items': items_note, 'filt': filt})
 
 
 @csrf_exempt
 @login_required
-def addressbook(request):
+def add_contact(request):
     form = ABForm(request.POST)
     if request.method == 'POST':
         try:
             name = request.POST['fullname']
-            phone = Phone(request.POST['phone']).value
-            birthday = Birthday(request.POST['dob']).value
-            if birthday > datetime.now():
-                print('12')
-                raise DateVeryBig
-            email = Email(request.POST['email']).value
+            if not name:
+                raise  EmptyName
+            phone = request.POST['phone']
+            if phone:
+                phone = Phone(phone).value
+            birthday = request.POST['dob']
+            if birthday:
+                birthday = Birthday(birthday).value
+                if birthday > datetime.now():
+                    print('12')
+                    raise DateVeryBig
+            email = request.POST['email']
+            if email:
+                # email = Email(email).value
+                email_validator = EmailValidator()
+                email_validator(email)
             address = request.POST['address']
             storage = messages.get_messages(request)
             storage.used = True
-            ab_phone = AddressBook.objects.filter(phone=phone)
-            ab_email = AddressBook.objects.filter(email=email)
+            ab_phone = AddressBook.objects.filter(user_id=request.user, phones__phone_number=phone)
+            ab_email = AddressBook.objects.filter(user_id=request.user, emails__mail=email)
             if ab_phone:
-                messages.error(request, 'This number already used')
-                return render(request, 'project/contact_edit.html', {'form': form})
+                messages.warning(request, 'This number already used')
+                return render(request, 'project/contact_add.html', {'form': form})
             if ab_email:
-                messages.error(request, 'This address already used')
-                return render(request, 'project/contact_edit.html', {'form': form})
-            ab = AddressBook(name=name, phone=phone, birthday=birthday, email=email, address=address,
-                             user_id=request.user)
-            ab.save()
+                messages.warning(request, 'This address already used')
+                return render(request, 'project/contact_add.html', {'form': form})
+            contact = AddressBook(user_id=request.user, name=name)
+            if birthday:
+                contact.birthday = birthday
+            if address:
+                contact.address = address
+            contact.save()
+            if phone:
+                new_phone = Phones(contact_id=contact.id, phone_number=phone, user_id=request.user.id)
+                new_phone.save()
+            if email:
+                new_email = Emails(contact_id=contact.id, mail=email, user_id=request.user.id)
+                new_email.save()
+        except ValidationError:
+            messages.warning(request, 'Email is not valid.')
+            return render(request, 'project/contact_add.html', {'form': form})
+        except EmptyName:
+            messages.warning(request, 'Name cannot be empty')
+            return render(request, 'project/contact_add.html', {'form': form})
         except ValueError:
-            messages.error(request, 'Invalid phone try 10 or 12 numbers')
-            return render(request, 'project/contact_edit.html', {'form': form})
+            messages.warning(request, 'Invalid phone try 10 or 12 numbers')
+            return render(request, 'project/contact_add.html', {'form': form})
         except DateIsNotValid:
-            messages.error(request, 'Invalid birthday, try: year-month-day')
-            return render(request, 'project/contact_edit.html', {'form': form})
+            messages.warning(request, 'Invalid birthday, try: year-month-day')
+            return render(request, 'project/contact_add.html', {'form': form})
         except AttributeError:
-            messages.error(request, 'Invalid email, try: symbols(,.@ a-z 0-9)')
-            return render(request, 'project/contact_edit.html', {'form': form})
+            messages.warning(request, 'Invalid email, try: symbols(,.@ a-z 0-9)')
+            return render(request, 'project/contact_add.html', {'form': form})
         except DateVeryBig:
-            messages.error(request, 'This date bigger than present date')
-            return render(request, 'project/contact_edit.html', {'form': form})
+            messages.warning(request, 'This date bigger than present date')
+            return render(request, 'project/contact_add.html', {'form': form})
         return redirect('show_contacts')
     else:
-        return render(request, 'project/contact_edit.html', {'form': form})
+        return render(request, 'project/contact_add.html', {'form': form})
 
 
 @csrf_exempt
@@ -238,31 +260,126 @@ def edit_ab(request, ab_id):
     if request.method == 'POST':
         try:
             name = request.POST['fullname']
-            phone = Phone(request.POST['phone']).value
             birthday = Birthday(request.POST['dob']).value
             if birthday > datetime.now():
                 raise DateVeryBig
-            email = Email(request.POST['email']).value
             address = request.POST['address']
-            contact.name, contact.phone, contact.birthday, contact.email, contact.address = name, phone, birthday, email, address
+            contact.name, contact.birthday, contact.address = name, birthday, address
             contact.save()
             storage = messages.get_messages(request)
             storage.used = True
             return redirect('show_contacts')
         except ValueError:
-            messages.error(request, 'Invalid phone try 10 or 12 numbers')
+            messages.warning(request, 'Invalid phone try 10 or 12 numbers')
             return render(request, 'project/contact_edit.html', {'contact': contact, 'form': form})
         except DateIsNotValid:
-            messages.error(request, 'Invalid birthday, try: year-month-day')
+            messages.warning(request, 'Invalid birthday, try: year-month-day')
             return render(request, 'project/contact_edit.html', {'contact': contact, 'form': form})
         except AttributeError:
-            messages.error(request, 'Invalid email, try: symbols(,.@ a-z 0-9)')
+            messages.warning(request, 'Invalid email, try: symbols(,.@ a-z 0-9)')
             return render(request, 'project/contact_edit.html', {'contact': contact, 'form': form})
         except DateVeryBig:
-            messages.error(request, 'This date bigger than present date')
+            messages.warning(request, 'This date bigger than present date')
             return render(request, 'project/contact_edit.html', {'contact': contact, 'form': form})
     else:
         return render(request, 'project/contact_edit.html', {'contact': contact, 'form': form})
+
+
+@csrf_exempt
+@login_required
+def phones_edit(request, ab_id):
+    phones_list = Phones.objects.filter(user_id=request.user, contact_id=ab_id).all()
+    contact = AddressBook.objects.filter(user_id=request.user, id=ab_id).first()
+    form = ABForm(request.POST)
+    if request.method == 'POST':
+        phone_id = int(request.POST.get('subbutton'))
+        new_phone = request.POST.get(f'phone-{phone_id}')
+        print(phone_id, new_phone)
+        if not new_phone:
+            messages.warning(request, 'Phone number is empty.')
+            return render(request, 'project/phones_edit.html', {'phones': phones_list, 'contact': contact, 'form': form})
+        try:
+            new_phone = Phone(new_phone).value
+            print(new_phone)
+        except ValueError:
+            messages.warning(request, 'Phone number is not valid.')
+            return render(request, 'project/phones_edit.html', {'phones': phones_list, 'contact': contact, 'form': form})
+        dubl_phone = Phones.objects.filter(phone_number=new_phone).exclude(id=phone_id).first()
+        if dubl_phone:
+            messages.warning(request, 'Phone number is now exist.')
+            return render(request, 'project/phones_edit.html', {'phones': phones_list, 'contact': contact, 'form': form})
+        if phone_id:
+            phone = Phones.objects.filter(id=phone_id).first()
+            mss = 'modify'
+        else:
+            phone = Phones(user_id=request.user.id, contact_id=ab_id)
+            mss = 'add'
+        phone.phone_number = new_phone
+        phone.save()
+        messages.info(request, f'Phone number {phone.phone_number} {mss}')
+
+    return render(request, 'project/phones_edit.html', {'phones': phones_list, 'contact': contact, 'form': form})
+
+
+@csrf_exempt
+@login_required
+def emails_edit(request, ab_id):
+    emails_list = Emails.objects.filter(user_id=request.user, contact_id=ab_id).all()
+    contact = AddressBook.objects.filter(user_id=request.user, id=ab_id).first()
+    form = ABForm(request.POST)
+    if request.method == 'POST':
+        email_id = int(request.POST.get('subbutton'))
+        new_email = request.POST.get(f'email-{email_id}')
+        if not new_email:
+            messages.warning(request, 'Email is empty.')
+            return render(request, 'project/emails_edit.html', {'emails': emails_list, 'contact': contact, 'form': form})
+        try:
+            # new_email = Email(new_email).value
+            email_validator = EmailValidator()
+            email_validator(new_email)
+        except ValidationError:
+            messages.warning(request, 'Email is not valid.')
+            return render(request, 'project/emails_edit.html', {'emails': emails_list, 'contact': contact, 'form': form})
+        except ValueError:
+            messages.warning(request, 'Email is not valid.')
+            return render(request, 'project/emails_edit.html', {'emails': emails_list, 'contact': contact, 'form': form})
+        except AttributeError:
+            messages.warning(request, 'Email is not valid.')
+            return render(request, 'project/emails_edit.html', {'emails': emails_list, 'contact': contact, 'form': form})
+        dubl_email = Emails.objects.filter(mail=new_email).exclude(id=email_id).first()
+        if dubl_email:
+            messages.warning(request, 'Email is now exist.')
+            return render(request, 'project/emails_edit.html', {'emails': emails_list, 'contact': contact, 'form': form})
+        if email_id:
+            email = Emails.objects.filter(id=email_id).first()
+            mss = 'modify'
+        else:
+            email = Emails(user_id=request.user.id, contact_id=ab_id)
+            mss = 'add'
+        email.mail = new_email
+        email.save()
+        messages.info(request, f'Email {email.mail} {mss}')
+
+    return render(request, 'project/emails_edit.html', {'emails': emails_list, 'contact': contact, 'form': form})
+
+
+@login_required
+def phone_del(request, ph_id):
+    phone = Phones.objects.filter(id=ph_id).first()
+    del_phone = phone.phone_number
+    phone.delete()
+    messages.info(request, f'Phone number {del_phone} deleted')
+    if request.method == 'GET':
+        return redirect('show_contacts')
+
+
+def email_del(request, em_id):
+    email = Emails.objects.filter(id=em_id).first()
+    del_email = email.mail
+    email.delete()
+    messages.info(request, f'Email {del_email} deleted')
+    if request.method == 'GET':
+        return redirect('show_contacts')
 
 
 @login_required
@@ -299,8 +416,7 @@ def filter_addressbook(request, filter):
             search_value = request.GET.get('search_key')
             contact = AddressBook.objects.filter(
                 Q(user_id=request.user, phone__contains=search_value) | Q(user_id=request.user,
-                                                                          name__icontains=search_value) | Q(
-                    user_id=request.user, email__contains=search_value))
+                name__icontains=search_value) | Q(user_id=request.user, email__contains=search_value))
             contacts = list(contact)
         elif filter == 'to_birthday':
             days_to_bd = int(request.GET.get('search_days'))
@@ -345,6 +461,7 @@ def parser(request):
     global currency
     # CURRENCY
     # https://https://finance.i.ua/
+    currency = []
     parsing_error = False
 
     base_url = 'https://finance.i.ua/'
@@ -466,6 +583,7 @@ def parser(request):
             result.update({"href": 'https://www.pravda.com.ua' + href})
             result.update({"source": data_source})
             news.append(result)
+
     news = filter(lambda nn: nn['dtime'] <= datetime.now(), news)
     sorted_news = sorted(news, key=lambda d: d['dtime'])
     sorted_news.reverse()
@@ -509,6 +627,7 @@ def file_download(request, file_id):
     while done is False:
         status, done = downloader.next_chunk()
         print("Download %d%%." % int(status.progress() * 100))
+    messages.info(request, f'File {down_file.name} downloaded')
     return redirect('view_files')
 
 
@@ -536,6 +655,7 @@ def file_upload(request):
         new_file.up_id = r['id']
         new_file.up_time = r['createdTime']
         new_file.save()
+        messages.info(request, f'File {filename} uploaded')
         return redirect('view_files')
     return render(request, 'project/file_upload.html')
 

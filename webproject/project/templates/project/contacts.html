@@ -58,7 +58,7 @@
                 </div>
             </form>
         </div>
-    </div>
+    </div><br>
 
     <div class="row mb-3">
         <h2>Contacts</h2>
@@ -86,8 +86,10 @@
                             </br>
                             <p class="card-title"><strong>Fullname: </strong> {{ contact.name }}</p>
                             </p>
-                            <p class="card-text"><strong>Birthday: </strong>{{ contact.birthday }}</p>
-                            <p class="card-text"><strong>Address: </strong>{{ contact.address }}</p>
+                            <p class="card-text"><strong>Birthday: </strong>
+                                {% if contact.birthday %}{{ contact.birthday }}{% endif %}</p>
+                            <p class="card-text"><strong>Address: </strong>
+                                {% if contact.address %}{{ contact.address }}{% endif %}</p>
                             <p class="card-text"><strong>Phone: </strong>{{ contact.phone_list }}</p>
                             <p class="card-text"><strong>Email: </strong>{{ contact.email_list }}</p>
                             <div class="d-flex justify-content-between align-items-center">

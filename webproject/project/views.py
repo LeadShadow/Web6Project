@@ -415,9 +415,9 @@ def filter_addressbook(request, filter):
         elif filter == 'search':
             search_value = request.GET.get('search_key')
             contact = AddressBook.objects.filter(
-                Q(user_id=request.user, phone__contains=search_value) | Q(user_id=request.user,
-                name__icontains=search_value) | Q(user_id=request.user, email__contains=search_value))
-            contacts = list(contact)
+                Q(user_id=request.user, phones__phone_number__icontains=search_value) | Q(user_id=request.user,
+                name__icontains=search_value) | Q(user_id=request.user, emails__mail__icontains=search_value))
+            contacts = list(set(contact))
         elif filter == 'to_birthday':
             days_to_bd = int(request.GET.get('search_days'))
             all_contact = AddressBook.objects.filter(user_id=request.user).all()

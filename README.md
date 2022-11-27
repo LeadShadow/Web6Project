@@ -15,9 +15,9 @@ You can go to:
 
 #### *Supported modules:* `adressbook`, `notebook`, `files`, `info_collector`
 
-`adressbook` - to add, change, delete, clear adressbook
+`adressbook` - to add, edit, delete
 
-`notebook` - to add, change, delete, clear notebook
+`notebook` - to add, edit, delete
 
 `files` - add files to server and download 
 

@@ -9,7 +9,8 @@
 ---
 ### Use
 
-You can go to https://finalweb.fly.dev/ and operate with this project)
+You can go to:
+<a href='https://finalweb.fly.dev/' target="_blank">Project</a>
 
 
 #### *Supported modules:* `adressbook`, `notebook`, `files`, `info_collector`

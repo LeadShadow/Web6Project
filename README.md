@@ -27,7 +27,7 @@ You can go to https://finalweb.fly.dev/ and operate with this project)
 
 ---
 ### Authors
-[![GitHub Contributors Image](https://contrib.rocks/image?repo=LeadShadow/CW-Console-Bot)](https://github.com/LeadShadow)
+[![GitHub Contributors Image](https://contrib.rocks/image?repo=LeadShadow/hw13web)](https://github.com/LeadShadow)
 [![GitHub Contributors Image](https://contrib.rocks/image?repo=VlodyaKr/Python-6-Core-HomeWork-12)](https://github.com/VlodyaKr)
 [![GitHub Contributors Image](https://contrib.rocks/image?repo=shuaaam/PythonWebHW13)](https://github.com/shuaaam)
 [![GitHub Contributors Image](https://contrib.rocks/image?repo=VitaliyLobko/PythonWeb_hw_8)](https://github.com/VitaliyLobko)
